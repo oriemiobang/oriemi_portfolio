@@ -1,0 +1,4 @@
+.icons-container:hover .icons{
+  color: red;
+  transition: color 0.3s;
+}
