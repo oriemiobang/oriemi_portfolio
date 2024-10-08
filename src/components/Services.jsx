@@ -29,7 +29,7 @@ function Services(){
             <SiFlutter   /> 
             </div>
             <div>
-                <h1>Flutter Development</h1>
+                <h1 className="font-semibold text-[23px] text-gray-600">Flutter Development</h1>
                 <p>I create high-performance, visually stunning mobile apps
                      using Flutter and Dart.
                       From concept to deployment,
@@ -46,7 +46,7 @@ function Services(){
             <CiMobile2   />
             </div>
             <div>
-                <h1>Web Development</h1>
+                <h1 className="font-semibold text-[23px] text-gray-600">Web Development</h1>
                 <p>I specialize in creating responsive and user-friendly websites using HTML,
                      CSS, JavaScript, and React. From design to deployment,
                      I deliver innovative web solutions tailored to your needs.
@@ -61,7 +61,7 @@ function Services(){
             <TbDeviceDesktopCode   />
             </div>
             <div className="flex gap-3 flex-col">
-                <h1>Desktop App</h1>
+                <h1 className="font-semibold text-[23px] text-gray-600">Desktop App</h1>
                 <p>I develop robust and user-friendly desktop applications using Python and Java. From design to deployment, I deliver customized solutions that meet your specific needs.
                 </p>
             </div>
