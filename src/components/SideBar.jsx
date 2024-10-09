@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProfilePic from '../assets/profile-img.jpg';
 import { FaTwitter, FaFacebook, FaInstagram, FaTelegram, FaLinkedinIn, FaHome, FaUser, FaFileAlt, FaSuitcase, FaTools } from 'react-icons/fa';
 import { IconContext } from 'react-icons';
@@ -7,12 +7,41 @@ import { MdOutlineMail } from "react-icons/md";
 
 function SideBar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
 
   const scrollToSection = (sectionId) => {
     const section = document.getElementById(sectionId);
     if (section) {
       section.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['home', 'about', 'fact','skill', 'resume', 'portfolio', 'service', 'contact'];
+      let currentSection = '';
+
+      sections.forEach((sectionId) => {
+        const section = document.getElementById(sectionId);
+        const sectionTop = section?.offsetTop || 0;
+        const sectionHeight = section?.offsetHeight || 0;
+
+        if (window.scrollY >= sectionTop - sectionHeight / 3 && window.scrollY < sectionTop + sectionHeight - sectionHeight / 3) {
+          currentSection = sectionId;
+        }
+      });
+
+      setActiveSection(currentSection);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const getActiveClass = (section) => {
+    return activeSection === section ? 'text-[#149ddd]' : 'text-gray-400';
   };
 
   return (
@@ -50,26 +79,31 @@ function SideBar() {
             </div>
           </IconContext.Provider>
         </div>
-
-        <div className='text-gray-400 flex flex-col gap-5 ml-10 mt-3'>
+        <div className='flex flex-col gap-5 ml-10'>
           <IconContext.Provider value={{ size: '1em' }}>
-            <div onClick={() => scrollToSection('home')}  className='flex cursor-pointer gap-5 text-[16px] items-center hover:text-[#149ddd] transition-all duration-500 ease-out delay-75'>
+            <div onClick={() => scrollToSection('home')} className={`flex cursor-pointer gap-5 text-[16px] items-center transition-all duration-500 ease-out delay-75 ${getActiveClass('home')}`}>
               <FaHome /> Home
             </div>
-            <div onClick={() => scrollToSection('about')}  className='flex cursor-pointer gap-5 text-[16px] items-center hover:text-[#149ddd] transition-all duration-500 ease-out delay-75'>
+            <div onClick={() => scrollToSection('about')} className={`flex cursor-pointer gap-5 text-[16px] items-center transition-all duration-500 ease-out delay-75 ${getActiveClass('about')}`}>
               <FaUser /> About
             </div>
-            <div onClick={() => scrollToSection('resume')}  className='flex cursor-pointer gap-5 text-[16px] items-center hover:text-[#149ddd] transition-all duration-500 ease-out delay-75'>
+            <div onClick={() => scrollToSection('fact')} className={`flex cursor-pointer gap-5 text-[16px] items-center transition-all duration-500 ease-out delay-75 ${getActiveClass('fact')}`}>
+              <FaUser /> Fact
+            </div>
+            <div onClick={() => scrollToSection('skill')} className={`flex cursor-pointer gap-5 text-[16px] items-center transition-all duration-500 ease-out delay-75 ${getActiveClass('skill')}`}>
+              <FaUser /> Skills
+            </div>
+            <div onClick={() => scrollToSection('resume')} className={`flex cursor-pointer gap-5 text-[16px] items-center transition-all duration-500 ease-out delay-75 ${getActiveClass('resume')}`}>
               <FaFileAlt /> Resume
             </div>
-            <div onClick={() => scrollToSection('portfolio')}  className='flex cursor-pointer gap-5 text-[16px] items-center hover:text-[#149ddd] transition-all duration-500 ease-out delay-75'>
+            <div onClick={() => scrollToSection('portfolio')} className={`flex cursor-pointer gap-5 text-[16px] items-center transition-all duration-500 ease-out delay-75 ${getActiveClass('portfolio')}`}>
               <FaSuitcase /> Portfolio
             </div>
-            <div onClick={() => scrollToSection('service')}  className='flex cursor-pointer gap-5 text-[16px] items-center hover:text-[#149ddd] transition-all duration-500 ease-out delay-75'>
+            <div onClick={() => scrollToSection('service')} className={`flex cursor-pointer gap-5 text-[16px] items-center transition-all duration-500 ease-out delay-75 ${getActiveClass('service')}`}>
               <FaTools /> Services
             </div>
-            <div onClick={() => scrollToSection('contact')}  className='flex cursor-pointer gap-5 text-[16px] items-center hover:text-[#149ddd] transition-all duration-500 ease-out delay-75'>
-            <MdOutlineMail /> Contact
+            <div onClick={() => scrollToSection('contact')} className={`flex cursor-pointer gap-5 text-[16px] items-center transition-all duration-500 ease-out delay-75 ${getActiveClass('contact')}`}>
+              <MdOutlineMail /> Contact
             </div>
           </IconContext.Provider>
         </div>
