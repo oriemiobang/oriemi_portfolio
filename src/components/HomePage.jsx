@@ -1,5 +1,5 @@
 import { ReactTyped } from "react-typed";
-
+// import profileImage from '.../p'
 function HomePage(){
 
     return (<>
