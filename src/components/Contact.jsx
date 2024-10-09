@@ -56,7 +56,7 @@ const publicKey = 'Rlp-utlbJ7t9SebJ_';
   }
 
     return (
-        <div className="pt-10 pb-32">
+        <div className="pt-10 pb-32" id="contact">
             <div className="pt-20 ml-8 mr-8 md:ml-14 text-[32px] font-bold">
         <h2 className="text-[#173b6c] font-railway">Contact</h2>
         

@@ -120,7 +120,7 @@ function Portfolio() {
     };
 
     return (
-        <div className="w-[100%] bg-[#f5f8fd] pb-16">
+        <div className="w-[100%] bg-[#f5f8fd] pb-16" id='portfolio'>
             <div>
                 <div className="pt-20 ml-8 mr-8 md:ml-14 text-[32px] font-bold">
                     <h2 className="text-[#173b6c] font-railway">Portfolio</h2>

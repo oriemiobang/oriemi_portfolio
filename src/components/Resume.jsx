@@ -9,7 +9,7 @@ function Resume(){
    const  personal_info = ['Gambella Ethiopia', '+251 928 752557', 'oriemiobango@gmail.com' ]
 
     return (
-    <div className="pb-10">
+    <div className="pb-10" id="resume">
         <div className="pt-20 ml-8 mr-8 md:ml-14 text-[32px] font-bold">
         <h2 className="text-[#173b6c] font-railway">Resume</h2>
         

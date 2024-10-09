@@ -52,7 +52,7 @@ function Facts() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
     return (
-        <div className="w-[100%] pb-5">
+        <div className="w-[100%] pb-5" id="fact">
             <div className="pt-20 ml-8 mr-8 md:ml-14 text-[32px] font-bold">
                 <h2 className="text-[#173b6c] font-railway">Facts</h2>
            

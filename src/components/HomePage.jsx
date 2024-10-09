@@ -3,7 +3,7 @@ import { ReactTyped } from "react-typed";
 function HomePage(){
 
     return (<>
-    <div className="w-[100%] h-screen bg-blue-950 bg-[url('src/assets/profile-img.jpg')] bg-center md:bg-top bg-fixed bg-cover ">
+    <div className="w-[100%] h-screen bg-blue-950 bg-[url('src/assets/profile-img.jpg')] bg-center md:bg-top bg-fixed bg-cover " id="home">
         <div className="h-screen w-[100%] bg-black bg-opacity-40 flex flex-col  items-center justify-center">
             
         <div className="flex items-center justify-center text-[50px] md:text-[70px] font-extrabold text-white font-railway mt-96 md:mt-0"><h1>Oriemi Obang</h1></div>

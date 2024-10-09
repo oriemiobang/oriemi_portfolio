@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 function Services(){
 
     return(<div>
-        <div className="pt-20 ml-8 mr-8 md:ml-14 text-[32px] font-bold">
+        <div className="pt-20 ml-8 mr-8 md:ml-14 text-[32px] font-bold" id="service">
         <h2 className="text-[#173b6c] font-railway">Services</h2>
         
         <div className="h-1 w-14 bg-[#149ddd] mt-2"></div>

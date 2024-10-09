@@ -34,7 +34,7 @@ function About() {
   }, []);
 
   return (
-    <div className=" w-[100%] ">
+    <div className=" w-[100%] " id='about'>
       <div className="pt-20 ml-8 mr-8 md:ml-14 text-[32px] font-bold">
         <h2 className="text-[#173b6c] font-railway">About</h2>
         <div className="h-1 w-14 bg-[#149ddd] mt-2"></div>
