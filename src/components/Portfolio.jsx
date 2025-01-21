@@ -196,10 +196,10 @@ function Portfolio() {
 
     return (
 
-        showInfo? <div className="flex px-5 md:px-0 fixed bg-white z-50 items-center justify-center flex-col h-screen w-full">
-            <div onClick={handleCancel} className='fixed md:right-96 md:mr-2 top-20 right-5  md:top-[24%]'><MdOutlineCancel size={30} /></div>
+        showInfo? <div className="flex overflow-y-scroll py-20 md:py-0 px-5 md:px-0 fixed bg-white z-50 items-center justify-center flex-col h-screen w-full">
+            <div onClick={handleCancel} className='fixed md:right-96 md:mr-2 top-4 right-5 cursor-pointer  md:top-[24%]'><MdOutlineCancel size={30} /></div>
         <div className='md:h-[50%] md:w-[90%]  md:gap-5 md:flex'>
-        <div className='w-[90%]'>
+        <div className='md:w-[90%] pt-32 md:pt-0'>
              <img src={image} alt="Portfolioo" className="object-cover w-full h-full" />
          </div>
          <div>
@@ -293,7 +293,7 @@ function Portfolio() {
                             <a href=' https://github.com/oriemiobang/dha_anywaa_challange'><FaGithub size={'30px'} /></a>
                            
                             </div>
-                            <div onClick={()=>handleShowInfo(0)} className='text-white w-[50%] flex  items-center justify-center'>
+                            <div onClick={()=>handleShowInfo(0)} className='text-white w-[50%] cursor-pointer flex  items-center justify-center'>
                             <FaLink  size={'20px'} />
                        
                             </div>
@@ -308,7 +308,7 @@ function Portfolio() {
                             <a href='https://github.com/oriemiobang/dha_anywaa_bible'><FaGithub size={'30px'} /></a>
                           
                             </div>
-                            <div onClick={()=>handleShowInfo(1)}  className='text-white w-[50%] flex  items-center justify-center'>
+                            <div onClick={()=>handleShowInfo(1)}  className='text-white w-[50%] cursor-pointer flex  items-center justify-center'>
                             <FaLink  size={'20px'} />
                             </div>
                         </div>
@@ -321,7 +321,7 @@ function Portfolio() {
                            <a href='https://github.com/oriemiobang/Dha-Anywaa-application'> <FaGithub size={'30px'} /></a>
                             
                             </div>
-                            <div onClick={()=>handleShowInfo(2)}  className='text-white w-[50%] flex  items-center justify-center'>
+                            <div onClick={()=>handleShowInfo(2)}  className='text-white w-[50%] flex cursor-pointer  items-center justify-center'>
                             <FaLink  size={'20px'} />
                             </div>
                         </div>
@@ -341,7 +341,7 @@ function Portfolio() {
                             <a href='https://github.com/oriemiobang/oriemi_portfolio'><FaGithub size={'30px'} /></a>
                             
                             </div>
-                            <div onClick={()=>handleShowInfo(3)}  className='text-white w-[50%] flex  items-center justify-center'>
+                            <div onClick={()=>handleShowInfo(3)}  className='text-white w-[50%] cursor-pointer flex  items-center justify-center'>
                             <FaLink  size={'20px'} />
                             </div>
                         </div>
@@ -354,7 +354,7 @@ function Portfolio() {
                             <a href='https://github.com/oriemiobang/invincible_site'><FaGithub size={'30px'} /></a>
                             
                             </div>
-                            <div onClick={()=>handleShowInfo(4)}  className='text-white w-[50%] flex  items-center justify-center'>
+                            <div onClick={()=>handleShowInfo(4)}  className='text-white w-[50%] cursor-pointer flex  items-center justify-center'>
                             <FaLink  size={'20px'} />
                             </div>
                         </div>
@@ -369,7 +369,7 @@ function Portfolio() {
                             <a href='https://github.com/MisganaGetachew/BeGena-Player'><FaGithub size={'30px'} /></a>
                             
                             </div>
-                            <div onClick={()=>handleShowInfo(5)}  className='text-white w-[50%] flex  items-center justify-center'>
+                            <div onClick={()=>handleShowInfo(5)}  className='text-white w-[50%] cursor-pointer flex  items-center justify-center'>
                             <FaLink  size={'20px'} />
                             </div>
                         </div>
