@@ -117,7 +117,7 @@ function Resume(){
                     </div>
 
                     <div> 
-                        <h1 className="font-semibold text-[21px] uppercase">Web developer & desktop app developer</h1>
+                        <h1 className="font-semibold text-[21px] uppercase">Mern Stack & desktop app developer</h1>
                         <div className="bg-slate-300 inline-block p-1"><p>2021 - Presenet</p></div>
                         <p className="italic pt-2 pb-2">Haramaya University</p>
                     
@@ -128,6 +128,8 @@ function Resume(){
                            <li>Built a music player application using Java JFS, providing a seamless and interactive user interface.</li>
                            <li>Ensured the quality and functionality of all applications through extensive testing and user feedback.</li>
                            <li>Managed project timelines and coordinated with team members to deliver high-quality results on schedule.</li>
+                           <li>My Bible Web, I utilized the MERN stack (MongoDB, Express, React, and Node.js) to build a dynamic, full-stack web application for Bible study and user interaction.</li>
+                           <li>ATSA Education, I used the MERN stack (MongoDB, Express, React, and Node.js) to develop a scalable e-learning platform that efficiently manages user data, courses, and progress tracking.</li>
                         </ul>
                     </div>
                 </div>
