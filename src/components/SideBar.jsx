@@ -61,21 +61,26 @@ function SideBar() {
 
           <IconContext.Provider value={{ size: '1em' }}>
             <div className='flex justify-around gap-3 mt-4'>
+              {/* <a href="#">
               <div className='w-8 cursor-pointer hover:bg-[#149ddd] text-white transition-all duration-500 ease-out delay-75 bg-gray-800 rounded-full h-8 flex items-center justify-center'>
                 <FaTwitter />
               </div>
+              </a> */}
+             <a href='https://www.facebook.com/oriemiobang.oriemi'> 
               <div className='w-8 cursor-pointer hover:bg-[#149ddd] text-white transition-all duration-500 ease-out delay-75 bg-gray-800 rounded-full h-8 flex items-center justify-center'>
                 <FaFacebook />
-              </div>
+              </div></a>
+              <a href='https://www.instagram.com/winynaadhi?igsh=MjFzajhtaXRsNWV2'>
               <div className='w-8 cursor-pointer hover:bg-[#149ddd] text-white transition-all duration-500 ease-out delay-75 bg-gray-800 rounded-full h-8 flex items-center justify-center'>
                 <FaInstagram />
               </div>
+              </a>
               <div className='w-8 cursor-pointer hover:bg-[#149ddd] text-white transition-all duration-500 ease-out delay-75 bg-gray-800 rounded-full h-8 flex items-center justify-center'>
                 <FaTelegram />
               </div>
-              <div className='w-8 cursor-pointer hover:bg-[#149ddd] text-white transition-all duration-500 ease-out delay-75 bg-gray-800 rounded-full h-8 flex items-center justify-center'>
+              <a href='https://www.linkedin.com/in/oriemi-obang-oriemi-682b2a267?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app'><div className='w-8 cursor-pointer hover:bg-[#149ddd] text-white transition-all duration-500 ease-out delay-75 bg-gray-800 rounded-full h-8 flex items-center justify-center'>
                 <FaLinkedinIn />
-              </div>
+              </div></a>
             </div>
           </IconContext.Provider>
         </div>
