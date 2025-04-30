@@ -93,7 +93,7 @@ const publicKey = 'Rlp-utlbJ7t9SebJ_';
                 </div>
                 <div>
                     <h1 className="font-semibold text-xl pb-2 text-[#050d18]">Call:</h1>
-                    <p>+2519 287 52557</p>
+                    {/* <p>+2519 287 52557</p> */}
                 </div>
             </div>
         </motion.div>
