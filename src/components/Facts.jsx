@@ -40,7 +40,7 @@ function Facts() {
         }
       };
 
-      animateCount(clientsRef, 232, 2);
+      animateCount(clientsRef, 10, 2);
       animateCount(projectsRef, 20, 1.5);
       animateCount(hoursRef, 1453, 2.5);
       animateCount(workersRef, 10, 1.5);
