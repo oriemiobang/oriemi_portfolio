@@ -42,7 +42,7 @@ function About() {
       <p className="ml-8 md:ml-14 mr-8 md:mr-14 mt-4">
         I'm Creative, web and mobile application developer from Ethiopia Gambella.
         I enjoy turning complex probelms into simple, beautiful and intuitive designs.
-        I am currently a third-year student of software engineering, in Haramaya University.
+        I am currently a fourth-year student of software engineering, in Haramaya University.
       </p>
 
       <div className='flex flex-col lg:flex-row ml-8 md:ml-14 mr-8 md:mr-14 gap-5 mt-5 md:gap-10' ref={boxContainerRef}>

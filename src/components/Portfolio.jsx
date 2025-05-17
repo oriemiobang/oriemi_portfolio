@@ -4,6 +4,7 @@ import dha from '../assets/moblie/dha_1.jpg';
 import deep from '../assets/web/web_1.jpg';
 import port from '../assets/web/port_3.png';
 import music from '../assets/desktop/music_1.png';
+import pngImage from '../assets/moblie/png.png';
 import { useState, useEffect, useRef } from 'react';
 import { FaLink } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
@@ -139,6 +140,15 @@ function Portfolio() {
 
         },
         {
+            image: pngImage,
+            category: 'Mobile',
+            client: 'Myself',
+            date: '1 march 2025',
+            projectUrl: 'https://github.com/oriemiobang/png_game',
+            description: 'PNG Number Guessing Game is a real-time multiplayer game where players compete by guessing each other’s secret 4-digit codes. Built with Flutter for the frontend and Node.js with Socket.io for the backend to enable seamless live interaction.'
+
+        },
+        {
             image:bible,
             category: 'Mobile App',
             client: 'Anywaa Community',
@@ -234,9 +244,9 @@ function Portfolio() {
                 </div>
             </div>
             <p className="ml-8 md:ml-14 mr-8 md:mr-14 mt-4 pt-5">
-                Welcome to my portfolio! Explore my projects in mobile, web, and desktop app development,
+                Welcome to my portfolio! Explore some my projects in mobile, web, and desktop app development,
                 including a multi-version Bible app, the Dha Anywaa language learning app,
-                interactive games like Bingo and Tic Tac Toe, and a feature-rich music player.
+                interactive games like Bingo and Tic Tac Toe, PNG, and a feature-rich music player.
                 Each project showcases my dedication to quality, innovation, and user-centered design.
             </p>
             <motion.div className="flex justify-center mt-10 animated"initial={{ opacity: 0, y: 60 }} 
@@ -300,6 +310,25 @@ function Portfolio() {
                         </div>
                         </div>
 
+
+
+                       {/* png game */
+                       }
+                        <div className="mobile animated relative group" ref={appImagesRef}>
+                        <img src={pngImage} alt="dha anywaa quiz icon" className="w-full h-auto" />
+
+                        <div className=' flex absolute bottom-0 left-0 w-full bg-[#149ddd] h-0 opacity-0 group-hover:h-12 group-hover:opacity-100 transition-all duration-500 ease-in-out'>
+                            <div className='text-white w-[50%] flex  items-center justify-center'>
+                            <a href='https://github.com/oriemiobang/png_game'><FaGithub size={'30px'} /></a>
+                          
+                            </div>
+                            <div onClick={()=>handleShowInfo(1)}  className='text-white w-[50%] cursor-pointer flex  items-center justify-center'>
+                            <FaLink  size={'20px'} />
+                            </div>
+                        </div>
+                        </div>
+
+
                         <div className="mobile animated relative group" ref={appImagesRef}>
                         <img src={bible} alt="dha anywaa quiz icon" className="w-full h-auto" />
 
@@ -308,11 +337,13 @@ function Portfolio() {
                             <a href='https://github.com/oriemiobang/dha_anywaa_bible'><FaGithub size={'30px'} /></a>
                           
                             </div>
-                            <div onClick={()=>handleShowInfo(1)}  className='text-white w-[50%] cursor-pointer flex  items-center justify-center'>
+                            <div onClick={()=>handleShowInfo(3)}  className='text-white w-[50%] cursor-pointer flex  items-center justify-center'>
                             <FaLink  size={'20px'} />
                             </div>
                         </div>
                         </div>
+
+
                         <div className="mobile animated relative group"ref={appImagesRef}>
                         <img src={dha} alt="dha anywaa quiz icon" className="w-full h-auto" />
 
@@ -321,7 +352,7 @@ function Portfolio() {
                            <a href='https://github.com/oriemiobang/Dha-Anywaa-application'> <FaGithub size={'30px'} /></a>
                             
                             </div>
-                            <div onClick={()=>handleShowInfo(2)}  className='text-white w-[50%] flex cursor-pointer  items-center justify-center'>
+                            <div onClick={()=>handleShowInfo(4)}  className='text-white w-[50%] flex cursor-pointer  items-center justify-center'>
                             <FaLink  size={'20px'} />
                             </div>
                         </div>

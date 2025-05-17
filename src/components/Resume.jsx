@@ -103,6 +103,7 @@ function Resume(){
                             <li>Developed the Dha Anywaa app to aid people in learning the Anywaa language.</li>
                             <li>Designed and built the Dha Anywaa Quiz app, providing an interactive platform for language practice.</li>
                             <li>Ensured the quality and performance of all apps through rigorous testing and user feedback.</li>
+                            <li>Currently working on a game called PNG, a position number guessing game 90% complete using flutter and node.</li>
                         </ul>
 
                     </div>

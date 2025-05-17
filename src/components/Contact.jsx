@@ -88,9 +88,9 @@ const publicKey = 'Rlp-utlbJ7t9SebJ_';
                 </div>
             </div>
             <div className="flex gap-5 group">
-                <div className="bg-[#dff3fc] w-12 flex text-[#149ddd] h-12 rounded-full justify-center items-center group-hover:text-white group-hover:bg-[#149ddd] transition-all duration-500 ease-out delay-75">
+                {/* <div className="bg-[#dff3fc] w-12 flex text-[#149ddd] h-12 rounded-full justify-center items-center group-hover:text-white group-hover:bg-[#149ddd] transition-all duration-500 ease-out delay-75">
                     <CiMobile2 />
-                </div>
+                </div> */}
                 {/* <div> */}
                     {/* <h1 className="font-semibold text-xl pb-2 text-[#050d18]">Call:</h1> */}
                     {/* <p>+2519 287 52557</p> */}
