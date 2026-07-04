@@ -30,7 +30,7 @@ function Skills() {
               <h1 className="font-mono text-[12px] font-medium text-[#b9812f]">{skill.value}%</h1>
             </div>
             <div className="h-2 w-full overflow-hidden rounded-full border border-[rgba(22,50,74,0.10)] bg-[#f8f7f3]">
-              <div className="h-full rounded-full bg-[linear-gradient(90deg,#4aa79b,#d6a85c)]" style={{ width: `${skill.value}%` }} />
+              <div className="h-full rounded-full bg-[#4aa79b]" style={{ width: `${skill.value}%` }} />
             </div>
           </div>
         ))}

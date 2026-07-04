@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import ProfilePic from '../assets/profile-img.jpg';
-import { FaFacebook, FaInstagram, FaTelegram, FaLinkedinIn, FaHome, FaUser, FaFileAlt, FaSuitcase, FaTools } from 'react-icons/fa';
+import { FaFacebook, FaInstagram, FaTelegram, FaLinkedinIn, FaHome, FaUser, FaFileAlt, FaSuitcase, FaTools, FaPen } from 'react-icons/fa';
 import { MdOutlineMail } from 'react-icons/md';
 import { IconContext } from 'react-icons';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
@@ -17,6 +17,7 @@ function SideBar() {
     { id: 'resume', label: 'Resume', icon: FaFileAlt },
     { id: 'portfolio', label: 'Portfolio', icon: FaSuitcase },
     { id: 'service', label: 'Services', icon: FaTools },
+    { id: 'blog', label: 'Blog', icon: FaPen },
     { id: 'contact', label: 'Contact', icon: MdOutlineMail },
   ];
 
@@ -67,7 +68,7 @@ function SideBar() {
         </button>
 
         <div className={`flex h-full flex-col ${isCollapsed ? 'items-center px-3 py-10 text-center' : 'items-center px-7 py-10 text-center'}`}>
-          <div className="mb-4 rounded-full bg-[conic-gradient(from_200deg,#d6a85c,#4aa79b,#d6a85c)] p-[3px]">
+          <div className="mb-4 rounded-full bg-[#d6a85c] p-[3px]">
             <img src={ProfilePic} alt="Oriemi Obang profile" className={`${isCollapsed ? 'h-[56px] w-[56px]' : 'h-[120px] w-[120px]'} rounded-full border-[3px] border-[#0c1017] object-cover transition-all duration-300`} />
           </div>
 
