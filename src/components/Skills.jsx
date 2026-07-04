@@ -1,120 +1,42 @@
-import { motion } from "framer-motion";
-// import { useEffect, useRef } from "react";
-import { useEffect, useState } from "react";
-import { useRef } from "react";
+function Skills() {
+  const skills = [
+    { name: 'Flutter / Dart', value: 98 },
+    { name: 'Tailwind CSS', value: 95 },
+    { name: 'Python', value: 95 },
+    { name: 'NestJS / Node.js', value: 98 },
+    { name: 'Firebase & PostgreSQL', value: 99 },
+  ];
 
-function Skills(){
+  return (
+    <section className="w-full bg-[#f5f8fd] py-14" id="skill">
+      <div className="ml-8 md:ml-14 mr-8 md:mr-14">
+        <p className="font-mono text-[12px] uppercase tracking-[0.18em] text-[#4aa79b]">What I bring to the table</p>
+      </div>
 
-    const [isVisible, setIsVisible] = useState(false);
-    const skillBarRef = useRef(null);
-  
-    useEffect(() => {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting) {
-            setIsVisible(true);
-            observer.disconnect(); // Once the bar is visible, stop observing
-          }
-        },
-        { threshold: 0.6 } // Trigger when 60% of the element is visible
-      );
-  
-      if (skillBarRef.current) {
-        observer.observe(skillBarRef.current);
-      }
-  
-      return () => {
-        if (skillBarRef.current) {
-          observer.unobserve(skillBarRef.current);
-        }
-      };
-    }, []);
-    return (
-        <div className=" w-[100%] bg-[#f5f8fd] pb-16" id="skill">
-            <div className="pt-20 ml-8 md:ml-14 text-[32px] mr-10 font-bold">
+      <div className="pt-2 ml-8 md:ml-14 text-[32px] mr-10 font-bold">
         <h2 className="text-[#173b6c] font-railway">Skills</h2>
-        
         <div className="h-1 w-14 bg-[#149ddd] mt-2"></div>
-        
-      </div>
-      <p className="mt-5 ml-8 md:ml-14 mr-8 md:mr-14">I am a versatile and dedicated professional with a diverse skill set encompassing both creative and technical domains. My passion for my craft drives me to continuously hone my skills and stay ahead of industry trends. My expertise includes:</p>
-
-      <div className="flex flex-col md:flex-row md:gap-5  mt-7 ml-8 mr-8 md:ml-14 md:mr-14 md:justify-between">
-
-
-
-        <motion.div className="flex flex-col gap-5 md:w-[50%]"  initial={{ opacity: 0, y: 50 }} 
-                        whileInView={{ opacity: 1, y: 0 }} 
-                        transition={{ duration: 0.8 }}
-                        viewport={{ once: true }}>
-             <div className="flex flex-col gap-1 w-[100%]" ref={skillBarRef}>
-      <div className="flex justify-between font-semibold">
-        <h1>HTML</h1>
-        <h1>99%</h1>
-      </div>
-      <div className="w-[100%] h-[13px] bg-[#dce8f8]">
-        <div
-          className={`h-[13px] bg-[#149ddd] ${
-            isVisible ? "w-[99%]" : "w-10"
-          } transition-all duration-1000`}
-        ></div>
-      </div>
-    </div>
-            <div className="flex flex-col gap-1 w-[100%]" ref={skillBarRef}>
-                <div className="flex justify-between font-semibold"><h1>Tailwind css</h1> <h1>90%</h1></div>
-                <div className="w-w-[100%] h-[13px] bg-[#dce8f8]"><div className={`h-[13px] bg-[#149ddd] ${
-            isVisible ? "w-[90%]" : "w-10"
-          } transition-all duration-1000`}></div></div>
-            </div>
-            <div className="flex flex-col gap-1 w-[100%]" ref={skillBarRef}>
-                <div className="flex justify-between font-semibold"><h1>Javascript</h1> <h1>88%</h1></div>
-                <div className="w-[100%] h-[13px] bg-[#dce8f8]"><div  className={`h-[13px] bg-[#149ddd] ${
-            isVisible ? "w-[88%]" : "w-10"
-          } transition-all duration-1000`}></div></div>
-            </div>
-            <div className="flex flex-col gap-1 w-[100%]" ref={skillBarRef}>
-                <div className="flex justify-between font-semibold"><h1>Dart & Flutter</h1> <h1>95%</h1></div>
-                <div className="w-[100%] h-[13px] bg-[#dce8f8]"><div  className={`h-[13px] bg-[#149ddd] ${
-            isVisible ? "w-[95%]" : "w-10"
-          } transition-all duration-1000`}></div></div>
-            </div>
-        </motion.div>
-
-
-        <motion.div className="flex flex-col gap-5 md:w-[50%]"  initial={{ opacity: 0, y: 90 }} 
-                        whileInView={{ opacity: 1, y: 0 }} 
-                        transition={{ duration: 0.9 }}
-                        viewport={{ once: true }}>
-            <div className="flex flex-col gap-1 w-[100%]" ref={skillBarRef}>
-                <div className="flex justify-between font-semibold"><h1>Python</h1> <h1>97%</h1></div>
-                <div className="w-[100%] h-[13px] bg-[#dce8f8]"><div  className={`h-[13px] bg-[#149ddd] ${
-            isVisible ? "w-[95%]" : "w-10"
-          } transition-all duration-1000`}></div></div>
-            </div>
-            <div className="flex flex-col gap-1 w-[100%]" ref={skillBarRef}>
-                <div className="flex justify-between font-semibold"><h1>Firebase</h1> <h1>85%</h1></div>
-                <div className="w-[100%] h-[13px] bg-[#dce8f8]"><div  className={`h-[13px] bg-[#149ddd] ${
-            isVisible ? "w-[85%]" : "w-10"
-          } transition-all duration-1000`}></div></div>
-            </div>
-            <div className="flex flex-col gap-1 w-[100%]" ref={skillBarRef}>
-                <div className="flex justify-between font-semibold"><h1>React</h1> <h1>90%</h1></div>
-                <div className="w-[100%] h-[13px] bg-[#dce8f8]"><div  className={`h-[13px] bg-[#149ddd] ${
-            isVisible ? "w-[90%]" : "w-10"
-          } transition-all duration-1000`}></div></div>
-            </div>
-            <div className="flex flex-col gap-1 w-[100%]" ref={skillBarRef}>
-                <div className="flex justify-between font-semibold"><h1>Java</h1> <h1>90%</h1></div>
-                <div className="w-[100%]  h-[13px] bg-[#dce8f8]"><div  className={`h-[13px] bg-[#149ddd] ${
-            isVisible ? "w-[90%]" : "w-10"
-          } transition-all duration-1000`}></div></div>
-            </div>
-        </motion.div>
-
       </div>
 
-        </div>
-    )
+      <p className="mt-6 ml-8 md:ml-14 mr-8 md:mr-14 max-w-[760px] text-[17px] leading-8 text-[#5a6270]">
+        I work across the stack, but I go deepest where it counts: fast, accessible interfaces up front and dependable, well-structured systems underneath. Here's where I currently rate my hands-on experience.
+      </p>
+
+      <div className="mt-10 ml-8 mr-8 md:ml-14 md:mr-14 grid gap-6 md:grid-cols-2">
+        {skills.map((skill) => (
+          <div key={skill.name} className="w-full">
+            <div className="mb-2 flex items-baseline justify-between font-semibold text-[#16324a]">
+              <h1 className="font-[Fraunces] text-[15.5px] font-semibold">{skill.name}</h1>
+              <h1 className="font-mono text-[12px] font-medium text-[#b9812f]">{skill.value}%</h1>
+            </div>
+            <div className="h-2 w-full overflow-hidden rounded-full border border-[rgba(22,50,74,0.10)] bg-[#f8f7f3]">
+              <div className="h-full rounded-full bg-[linear-gradient(90deg,#4aa79b,#d6a85c)]" style={{ width: `${skill.value}%` }} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 }
 
 export default Skills;
