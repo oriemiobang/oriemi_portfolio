@@ -31,10 +31,10 @@ function Portfolio() {
         },
         {
             id: 2,
-            title: 'Awilli - Mini Game Hub',
-            shortDescription: 'Bingo and Tic-Tac-Toe with realtime matchmaking.',
+            title: 'PNG Game',
+            shortDescription: 'A multiplayer number guessing game.',
             description:
-                'Awilli is a real-time mini game hub that focuses on fast, social gameplay. It includes Bingo and Tic-Tac-Toe with a Flutter client and NestJS-powered backend services for live game state and player interactions.',
+                'A multiplayer number guessing game where two players play online by holding a 4-digit code. Each player tries to guess the other\'s number, receiving feedback on correct numbers and correct positions. PNG stands for Position Number Guessing game.',
             image: pngImage,
             category: 'app',
             categoryLabel: 'Mobile App',
