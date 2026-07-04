@@ -1,124 +1,128 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import ProfilePic from '../assets/profile-img.jpg';
-import { FaTwitter, FaFacebook, FaInstagram, FaTelegram, FaLinkedinIn, FaHome, FaUser, FaFileAlt, FaSuitcase, FaTools } from 'react-icons/fa';
+import { FaFacebook, FaInstagram, FaTelegram, FaLinkedinIn, FaHome, FaUser, FaFileAlt, FaSuitcase, FaTools } from 'react-icons/fa';
+import { MdOutlineMail } from 'react-icons/md';
 import { IconContext } from 'react-icons';
-import { IoIosMenu } from "react-icons/io";
-import { MdOutlineMail } from "react-icons/md";
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 function SideBar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('');
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
+
+  const sections = [
+    { id: 'home', label: 'Home', icon: FaHome },
+    { id: 'about', label: 'About', icon: FaUser },
+    { id: 'fact', label: 'Fact', icon: FaUser },
+    { id: 'skill', label: 'Skills', icon: FaUser },
+    { id: 'resume', label: 'Resume', icon: FaFileAlt },
+    { id: 'portfolio', label: 'Portfolio', icon: FaSuitcase },
+    { id: 'service', label: 'Services', icon: FaTools },
+    { id: 'contact', label: 'Contact', icon: MdOutlineMail },
+  ];
 
   const scrollToSection = (sectionId) => {
     const section = document.getElementById(sectionId);
     if (section) {
       section.scrollIntoView({ behavior: 'smooth' });
+      setActiveSection(sectionId);
     }
   };
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'about', 'fact','skill', 'resume', 'portfolio', 'service', 'contact'];
-      let currentSection = '';
+      const current = sections.find(({ id }) => {
+        const section = document.getElementById(id);
+        if (!section) return false;
 
-      sections.forEach((sectionId) => {
-        const section = document.getElementById(sectionId);
-        const sectionTop = section?.offsetTop || 0;
-        const sectionHeight = section?.offsetHeight || 0;
-
-        if (window.scrollY >= sectionTop - sectionHeight / 3 && window.scrollY < sectionTop + sectionHeight - sectionHeight / 3) {
-          currentSection = sectionId;
-        }
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.offsetHeight;
+        return window.scrollY >= sectionTop - sectionHeight / 3 && window.scrollY < sectionTop + sectionHeight - sectionHeight / 3;
       });
 
-      setActiveSection(currentSection);
+      if (current?.id) {
+        setActiveSection(current.id);
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    handleScroll();
+
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const getActiveClass = (section) => {
-    return activeSection === section ? 'text-[#149ddd]' : 'text-gray-400';
-  };
+  const NavIcon = ({ icon: Icon }) => <Icon className="shrink-0" />;
+
+  const sidebarWidthClass = isCollapsed ? 'w-[84px] lg:w-[84px]' : 'w-72 lg:w-[260px]';
 
   return (
-    <div>
-      {/* Sidebar */}
-      <div
-        className={`fixed z-50 top-0 left-0 h-screen bg-[#040b14] lg:w-[20%] xl:w-[21%] w-72 transform transition-transform duration-300 ease-in-out 
-          ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:block`}
-      >
-        <div className='flex flex-col items-center justify-center w-full p-5'>
-          <img
-            className='flex justify-center rounded-full m-[10px auto] w-[150px] border-[8px] border-solid border-[#2c2f3f]'
-            src={ProfilePic}
-            alt="my profile picture"
-          />
-          <h1 className='font-semibold text-[26px] text-white font-railway pt-2 pb-1'>Oriemi Obang</h1>
+    <>
+      <aside className={`fixed left-0 top-0 z-50 h-screen ${sidebarWidthClass} bg-[#0c1017] text-[#e9ecf1] transition-all duration-300 ease-in-out`}>
+        <button
+          type="button"
+          onClick={() => setIsCollapsed((value) => !value)}
+          className="absolute right-[-18px] top-5 flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(255,255,255,0.07)] bg-[#149ddd] text-white shadow-lg transition-transform duration-300 hover:scale-105"
+          aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          {isCollapsed ? <IoIosArrowForward size={24} /> : <IoIosArrowBack size={24} />}
+        </button>
+
+        <div className={`flex h-full flex-col ${isCollapsed ? 'items-center px-3 py-10 text-center' : 'items-center px-7 py-10 text-center'}`}>
+          <div className="mb-4 rounded-full bg-[conic-gradient(from_200deg,#d6a85c,#4aa79b,#d6a85c)] p-[3px]">
+            <img src={ProfilePic} alt="Oriemi Obang profile" className={`${isCollapsed ? 'h-[56px] w-[56px]' : 'h-[120px] w-[120px]'} rounded-full border-[3px] border-[#0c1017] object-cover transition-all duration-300`} />
+          </div>
+
+          {!isCollapsed ? (
+            <>
+              <h1 className="mb-1 font-[Fraunces] text-[22px] font-semibold tracking-[0.2px] text-[#e9ecf1]">
+                Oriemi Obang
+              </h1>
+              <div className="mb-8 font-mono text-[11px] uppercase tracking-[0.08em] text-[#d6a85c]">
+                Full-Stack Developer
+              </div>
+            </>
+          ) : null}
 
           <IconContext.Provider value={{ size: '1em' }}>
-            <div className='flex justify-around gap-3 mt-4'>
-              {/* <a href="#">
-              <div className='w-8 cursor-pointer hover:bg-[#149ddd] text-white transition-all duration-500 ease-out delay-75 bg-gray-800 rounded-full h-8 flex items-center justify-center'>
-                <FaTwitter />
-              </div>
-              </a> */}
-             <a href='https://www.facebook.com/oriemiobang.oriemi'> 
-              <div className='w-8 cursor-pointer hover:bg-[#149ddd] text-white transition-all duration-500 ease-out delay-75 bg-gray-800 rounded-full h-8 flex items-center justify-center'>
+            <div className={`mb-9 flex gap-2.5 ${isCollapsed ? 'flex-col' : ''}`}>
+              <a href="https://www.facebook.com/oriemiobang.oriemi" aria-label="Facebook" className="flex h-[34px] w-[34px] items-center justify-center rounded-full border border-[rgba(255,255,255,0.07)] bg-[#10151d] text-[#8b93a5] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#d6a85c] hover:text-[#d6a85c]">
                 <FaFacebook />
-              </div></a>
-              <a href='https://www.instagram.com/winynaadhi?igsh=MjFzajhtaXRsNWV2'>
-              <div className='w-8 cursor-pointer hover:bg-[#149ddd] text-white transition-all duration-500 ease-out delay-75 bg-gray-800 rounded-full h-8 flex items-center justify-center'>
-                <FaInstagram />
-              </div>
               </a>
-              <div className='w-8 cursor-pointer hover:bg-[#149ddd] text-white transition-all duration-500 ease-out delay-75 bg-gray-800 rounded-full h-8 flex items-center justify-center'>
+              <a href="https://www.instagram.com/winynaadhi?igsh=MjFzajhtaXRsNWV2" aria-label="Instagram" className="flex h-[34px] w-[34px] items-center justify-center rounded-full border border-[rgba(255,255,255,0.07)] bg-[#10151d] text-[#8b93a5] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#d6a85c] hover:text-[#d6a85c]">
+                <FaInstagram />
+              </a>
+              <a href="https://t.me/" aria-label="Telegram" className="flex h-[34px] w-[34px] items-center justify-center rounded-full border border-[rgba(255,255,255,0.07)] bg-[#10151d] text-[#8b93a5] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#d6a85c] hover:text-[#d6a85c]">
                 <FaTelegram />
-              </div>
-              <a href='https://www.linkedin.com/in/oriemi-obang-oriemi-682b2a267?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app'><div className='w-8 cursor-pointer hover:bg-[#149ddd] text-white transition-all duration-500 ease-out delay-75 bg-gray-800 rounded-full h-8 flex items-center justify-center'>
+              </a>
+              <a href="https://www.linkedin.com/in/oriemi-obang-oriemi-682b2a267?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" aria-label="LinkedIn" className="flex h-[34px] w-[34px] items-center justify-center rounded-full border border-[rgba(255,255,255,0.07)] bg-[#10151d] text-[#8b93a5] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#d6a85c] hover:text-[#d6a85c]">
                 <FaLinkedinIn />
-              </div></a>
+              </a>
             </div>
           </IconContext.Provider>
-        </div>
-        <div className='flex flex-col gap-5 ml-10'>
-          <IconContext.Provider value={{ size: '1em' }}>
-            <div onClick={() => scrollToSection('home')} className={`flex cursor-pointer gap-5 text-[16px] items-center transition-all duration-500 ease-out delay-75 ${getActiveClass('home')}`}>
-              <FaHome /> Home
-            </div>
-            <div onClick={() => scrollToSection('about')} className={`flex cursor-pointer gap-5 text-[16px] items-center transition-all duration-500 ease-out delay-75 ${getActiveClass('about')}`}>
-              <FaUser /> About
-            </div>
-            <div onClick={() => scrollToSection('fact')} className={`flex cursor-pointer gap-5 text-[16px] items-center transition-all duration-500 ease-out delay-75 ${getActiveClass('fact')}`}>
-              <FaUser /> Fact
-            </div>
-            <div onClick={() => scrollToSection('skill')} className={`flex cursor-pointer gap-5 text-[16px] items-center transition-all duration-500 ease-out delay-75 ${getActiveClass('skill')}`}>
-              <FaUser /> Skills
-            </div>
-            <div onClick={() => scrollToSection('resume')} className={`flex cursor-pointer gap-5 text-[16px] items-center transition-all duration-500 ease-out delay-75 ${getActiveClass('resume')}`}>
-              <FaFileAlt /> Resume
-            </div>
-            <div onClick={() => scrollToSection('portfolio')} className={`flex cursor-pointer gap-5 text-[16px] items-center transition-all duration-500 ease-out delay-75 ${getActiveClass('portfolio')}`}>
-              <FaSuitcase /> Portfolio
-            </div>
-            <div onClick={() => scrollToSection('service')} className={`flex cursor-pointer gap-5 text-[16px] items-center transition-all duration-500 ease-out delay-75 ${getActiveClass('service')}`}>
-              <FaTools /> Services
-            </div>
-            <div onClick={() => scrollToSection('contact')} className={`flex cursor-pointer gap-5 text-[16px] items-center transition-all duration-500 ease-out delay-75 ${getActiveClass('contact')}`}>
-              <MdOutlineMail /> Contact
-            </div>
-          </IconContext.Provider>
-        </div>
-      </div>
 
-      {/* Toggle Button for small screens */}
-      <div onClick={() => setIsOpen(!isOpen)} className="z-50 lg:hidden top-10 right-10 fixed rounded-full flex justify-center items-center bg-[#149ddd] h-10 w-10">
-        <IoIosMenu color="white" size={30} />
-      </div>
-    </div>
+          <nav className={`w-full text-left ${isCollapsed ? 'mt-2' : ''}`}>
+            {sections.map(({ id, label, icon: Icon }) => {
+              const isActive = activeSection === id;
+
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => scrollToSection(id)}
+                  className={`relative mb-[2px] flex w-full items-center rounded-[8px] py-[11px] text-[14.5px] font-medium transition-all duration-150 ${isCollapsed ? 'justify-center gap-0 px-0' : 'gap-3 px-[14px]'} ${isActive ? 'bg-[#10151d] text-[#e9ecf1]' : 'text-[#8b93a5] hover:bg-[#10151d] hover:text-[#e9ecf1]'}`}
+                  title={label}
+                >
+                  <span className={`h-[5px] w-[5px] rounded-full ${isActive ? 'bg-[#d6a85c] shadow-[0_0_8px_#d6a85c]' : 'bg-[#5b6272]'}`} />
+                  <NavIcon icon={Icon} />
+                  {!isCollapsed ? <span>{label}</span> : null}
+                  {isActive ? <span className="absolute left-[-28px] top-0 bottom-0 w-[3px] rounded-[2px] bg-[#d6a85c]" /> : null}
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+      </aside>
+
+    </>
   );
 }
 

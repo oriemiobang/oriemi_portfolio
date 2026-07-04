@@ -1,11 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
-
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -49,22 +42,8 @@
   }
 }
 
-/* @keyframes from-bottom {
-  0% {
-    transform: translateY(50px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(-10%);
-    opacity: 1;
-  }
-} */
-
-.progress-bar {
-  width: 0; /* Initial width */
-  transition: width 2s ease-in-out; /* Smooth transition */
-}
-
-.progress-bar-loaded {
-  width: 99%; /* Target width */
+body {
+  font-family: 'Inter', sans-serif;
+  background: #ffffff;
+  color: #14181f;
 }
