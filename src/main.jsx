@@ -14,25 +14,22 @@ import AIAssistant from './components/AIAssistant.jsx'
 import Blog from './components/Blog.jsx'
 import PostDetail from './components/PostDetail.jsx'
 import Contact from './components/Contact.jsx'
-
-import { mockBlogPosts } from './data/mockBlogData.jsx'
+import AdminApp from './components/admin/AdminApp.jsx'
 
 function MainApp() {
   const [view, setView] = useState('main'); // 'main' or 'post-detail'
-  const [activePostId, setActivePostId] = useState(null);
+  const [activePostSlug, setActivePostSlug] = useState(null);
 
-  const handleOpenPost = (id) => {
-    setActivePostId(id);
+  const handleOpenPost = (slug) => {
+    setActivePostSlug(slug);
     setView('post-detail');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleBack = () => {
     setView('main');
-    setActivePostId(null);
+    setActivePostSlug(null);
   };
-
-  const activePost = mockBlogPosts.find(p => p.id === activePostId) || mockBlogPosts[0];
 
   return (
     <div className='flex font-open'>
@@ -52,15 +49,22 @@ function MainApp() {
             <Contact />
           </>
         ) : (
-          <PostDetail post={activePost} onBack={handleBack} />
+          <PostDetail slug={activePostSlug} onBack={handleBack} />
         )}
       </div>
     </div>
   );
 }
 
+function Root() {
+  if (window.location.pathname.startsWith('/admin')) {
+    return <AdminApp />;
+  }
+  return <MainApp />;
+}
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <MainApp />
+    <Root />
   </StrictMode>,
 )

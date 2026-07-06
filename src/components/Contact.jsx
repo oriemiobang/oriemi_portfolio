@@ -1,14 +1,11 @@
 import React, { useRef, useState } from 'react';
-import emailjs from 'emailjs-com';
+import { api } from '../services/api';
 import './Contact.css';
 
 function Contact() {
   const formRef = useRef(null);
   const [isSending, setIsSending] = useState(false);
-
-  const templateId = 'template_2qsl1j5';
-  const serviceId = 'service_16pyqn6';
-  const publicKey = 'Rlp-utlbJ7t9SebJ_';
+  const [toast, setToast] = useState({ show: false, message: '', type: '' });
 
   function sendEmail(event) {
     event.preventDefault();
@@ -16,24 +13,23 @@ function Contact() {
 
     const formData = new FormData(event.target);
     const paramsObj = {
-      username: formData.get('username'),
+      name: formData.get('username'),
       email: formData.get('email'),
       message: formData.get('message'),
       subject: formData.get('subject'),
       phone: formData.get('phone')
     };
 
-    emailjs.send(serviceId, templateId, paramsObj, publicKey)
+    api.sendMessage(paramsObj)
       .then((response) => {
-        if (formRef.current) {
-          formRef.current.reset();
-        }
-        alert("Email sent successfully!");
-        console.log(response);
+        if (formRef.current) formRef.current.reset();
+        setToast({ show: true, message: 'Email sent successfully!', type: 'success' });
+        setTimeout(() => setToast({ show: false, message: '', type: '' }), 4000);
       })
       .catch((error) => {
         console.log(error);
-        alert("Couldn't send email. Check your network connection.");
+        setToast({ show: true, message: "Couldn't send email. Check your network connection.", type: 'error' });
+        setTimeout(() => setToast({ show: false, message: '', type: '' }), 4000);
       })
       .finally(() => {
         setIsSending(false);
@@ -42,6 +38,19 @@ function Contact() {
 
   return (
     <div id="contact" className="contact-content">
+      {toast.show && (
+        <div className={`toast-notification ${toast.type}`}>
+          <div className="toast-icon">
+            {toast.type === 'success' ? (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            ) : (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            )}
+          </div>
+          <p>{toast.message}</p>
+        </div>
+      )}
+
       <svg className="contour-bg" viewBox="0 0 520 340" xmlns="http://www.w3.org/2000/svg">
         <path d="M-20,60 C 120,20 240,110 400,60 S 560,10 620,55" fill="none" stroke="#4aa79b" strokeWidth="1.1" opacity="0.35"/>
         <path d="M-20,105 C 130,65 260,150 420,105 S 570,55 620,100" fill="none" stroke="#4aa79b" strokeWidth="1.1" opacity="0.25"/>
