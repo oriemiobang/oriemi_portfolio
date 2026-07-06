@@ -1005,7 +1005,7 @@ function KnowledgePage() {
   
   const fetchKnowledge = async () => {
     try {
-      const res = await fetch(`${API_URL}/admin/knowledge`, { headers: getAuthHeaders() });
+      const res = await fetch(`${API_URL}/ai/admin/knowledge`, { headers: getAuthHeaders() });
       const data = await res.json();
       setEntries(data || []);
     } catch (err) { console.error(err); }
@@ -1043,7 +1043,7 @@ function KnowledgePage() {
   async function saveDraft() {
     if (!draft.question.trim() || !draft.answer.trim()) return;
     const isNew = !draft.id;
-    const url = isNew ? `${API_URL}/admin/knowledge` : `${API_URL}/admin/knowledge/${draft.id}`;
+    const url = isNew ? `${API_URL}/ai/admin/knowledge` : `${API_URL}/ai/admin/knowledge/${draft.id}`;
     const method = isNew ? 'POST' : 'PATCH';
     
     try {
@@ -1059,7 +1059,7 @@ function KnowledgePage() {
     } catch(e) { setToast("Error saving"); }
   }
   function doDelete(e) { 
-    fetch(`${API_URL}/admin/knowledge/${e.id}`, { method: 'DELETE', headers: getAuthHeaders() }).then(() => { 
+    fetch(`${API_URL}/ai/admin/knowledge/${e.id}`, { method: 'DELETE', headers: getAuthHeaders() }).then(() => { 
       setEntries((prev) => prev.filter((x) => x.id !== e.id)); 
       setConfirmDelete(null); 
       setToast("Entry deleted"); 
