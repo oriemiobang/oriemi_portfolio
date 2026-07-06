@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import ProfileImage from '../assets/DSC02693.JPG';
+import ResumePDF from '../assets/res.pdf';
 
 function HomePage() {
     const words = ['mobile apps', 'web platforms', 'backend systems', 'full-stack products'];
@@ -102,6 +103,16 @@ function HomePage() {
                             className="inline-flex items-center gap-2 rounded-[10px] border border-black/10 bg-[#f6f5f1] px-6 py-3.5 text-[14.5px] font-semibold text-[#14181f] transition-transform duration-200 hover:-translate-y-0.5 hover:border-[#2f8577] hover:text-[#2f8577]"
                         >
                             Get in touch
+                        </a>
+                        <a
+                            href={ResumePDF}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            download="Oriemi_Obang_Resume.pdf"
+                            className="inline-flex items-center gap-2 rounded-[10px] border border-black/10 bg-[#f6f5f1] px-6 py-3.5 text-[14.5px] font-semibold text-[#14181f] transition-transform duration-200 hover:-translate-y-0.5 hover:border-[#b9812f] hover:text-[#b9812f]"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Resume
                         </a>
                     </div>
 
