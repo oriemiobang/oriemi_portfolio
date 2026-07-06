@@ -271,15 +271,7 @@ const CATEGORIES = [
   { value: "desktop", label: "Desktop" },
 ];
 
-const seedProjects = [
-  { id: "p1", title: "Dha Anywaa Challenge", category: "app", client: "Personal Project", date: "2024-03-01", description: "A Flutter language-learning game built around the Anywaa alphabet and vocabulary, with timed quizzes and a live leaderboard.", tags: ["Flutter", "Firebase", "Dart", "Realtime DB"], liveUrl: "https://oloni.app", sourceUrl: "", imageUrl: "", featured: true },
-  { id: "p2", title: "PNG Game", category: "app", client: "Personal Project", date: "2025-03-01", description: "A multiplayer number guessing game where two players hold a secret 4-digit code and try to crack each other's.", tags: ["Flutter", "NestJS", "WebSockets"], liveUrl: "https://png-game.app", sourceUrl: "https://github.com/jininadev/png-game", imageUrl: "", featured: false },
-  { id: "p3", title: "Multi-Version Bible App", category: "app", client: "Personal Project", date: "2024-01-15", description: "Ten translations displayed side by side, built with accessibility as a first-class concern.", tags: ["Flutter", "Firebase"], liveUrl: "", sourceUrl: "", imageUrl: "", featured: false },
-  { id: "p4", title: "Dha Anywaa and Dha Anywaa Quiz", category: "app", client: "Personal Project", date: "2023-12-10", description: "Companion quiz app to Dha Anywaa Challenge, focused on spaced repetition drills.", tags: ["Flutter", "SQLite"], liveUrl: "", sourceUrl: "", imageUrl: "", featured: false },
-  { id: "p5", title: "Personal Portfolio Website", category: "web", client: "Personal Project", date: "2024-02-27", description: "This site — a dark-sidebar, full-stack developer portfolio with a blog and AI assistant.", tags: ["Next.js", "Tailwind", "PostgreSQL"], liveUrl: "https://oriemiobango.netlify.app", sourceUrl: "", imageUrl: "", featured: false },
-  { id: "p6", title: "DeepLabs Team Site", category: "web", client: "DeepLabs", date: "2024-06-19", description: "Marketing and team site for DeepLabs, tuned for fast load times on low bandwidth.", tags: ["Next.js", "Tailwind"], liveUrl: "", sourceUrl: "", imageUrl: "", featured: false },
-  { id: "p7", title: "Be-Gena Player", category: "desktop", client: "Personal Project", date: "2023-03-10", description: "Cross-platform Flutter desktop media player shipped to Windows, macOS, and Linux from one codebase.", tags: ["Flutter", "Dart", "SQLite"], liveUrl: "", sourceUrl: "https://github.com/jininadev/be-gena-player", imageUrl: "", featured: false },
-];
+
 
 function emptyProjectDraft() {
   return { id: null, title: "", category: "app", client: "Personal Project", date: new Date().toISOString().slice(0, 10), description: "", tags: [], liveUrl: "", sourceUrl: "", imageUrl: "", featured: false };
@@ -531,13 +523,7 @@ const BLOG_BADGE_COLOR = {
   life: { bg: "rgba(15,31,53,0.9)", fg: "#fff" },
 };
 
-const seedPosts = [
-  { id: "b1", title: "Building a cross-platform desktop app in Flutter — what I'd do differently", category: "projects", status: "published", type: "read", readTime: 6, date: "2025-01-10", excerpt: "A behind-the-scenes look at shipping the same Flutter codebase to Windows, macOS, and Linux.", coverUrl: "", featured: true },
-  { id: "b2", title: "Structuring a NestJS API for a Next.js frontend", category: "tutorial", status: "published", type: "read", readTime: 4, date: "2024-11-02", excerpt: "The folder structure and module patterns I default to when a project needs to scale past its first few endpoints.", coverUrl: "", featured: false },
-  { id: "b3", title: "Walkthrough: from Figma prototype to shipped app", category: "video", status: "published", type: "watch", readTime: 8, date: "2024-10-21", excerpt: "A screen-recorded walkthrough of turning a rough prototype into a working Flutter build, start to finish.", coverUrl: "", featured: false },
-  { id: "b4", title: "One year of freelancing — what actually changed", category: "life", status: "published", type: "read", readTime: 3, date: "2024-09-15", excerpt: "Reflections on the first twelve months working independently, the mistakes, and what I'd tell myself back then.", coverUrl: "", featured: false },
-  { id: "b5", title: "Notes on Gebeta Maps vs. Google Maps for the Ethiopian market", category: "projects", status: "draft", type: "read", readTime: 5, date: "2024-08-02", excerpt: "Why local coverage mattered more than brand recognition for Oloni's routing needs.", coverUrl: "", featured: false },
-];
+
 
 function emptyPostDraft() {
   return { id: null, title: "", category: "projects", status: "draft", type: "read", readTime: 5, date: new Date().toISOString().slice(0, 10), excerpt: "", coverUrl: "", featured: false };
@@ -742,12 +728,7 @@ function BlogPage() {
 // ===========================================================================
 // CONTACT INBOX PAGE
 // ===========================================================================
-const seedMessages = [
-  { id: "m1", name: "Selam Tesfaye", email: "selam.t@example.com", subject: "Interested in a booking system for our NGO", message: "Hi, I saw the beneficiary tracking concept on your site — we run a small NGO in the SNNPR region and are looking for something similar for case management. Do you have time for a call next week?", date: "2026-07-05T09:20:00", read: false, archived: false },
-  { id: "m2", name: "Daniel Okoth", email: "d.okoth@deeplabs.co", subject: "Follow up on the team site", message: "Thanks for the latest round of edits on the DeepLabs site — the load time improved a lot. One small thing: can we swap the hero image on the About page?", date: "2026-07-03T14:05:00", read: true, archived: false },
-  { id: "m3", name: "Nyabuoy Gatkuoth", email: "nyabuoy.g@example.com", subject: "Anywaa keyboard — when is it launching?", message: "I've been waiting for an Anywaa keyboard for years. Is there a beta I can join, and will it support the digraphs properly on both Android and iOS?", date: "2026-07-01T18:40:00", read: false, archived: false },
-  { id: "m4", name: "Michael Bekele", email: "mbekele@gmail.com", subject: "Quick question about Oloni pricing", message: "Does Oloni support cash payments alongside Telebirr and CBE Birr, or is it digital-only for now?", date: "2026-06-27T11:15:00", read: true, archived: false },
-];
+
 
 function InboxPage() {
   const [messages, setMessages] = useState([]);
@@ -885,16 +866,18 @@ function InboxPage() {
 // ===========================================================================
 // NEWSLETTER PAGE
 // ===========================================================================
-const seedSubscribers = [
-  { id: "s1", email: "selam.t@example.com", date: "2026-06-01", status: "active" },
-  { id: "s2", email: "d.okoth@deeplabs.co", date: "2026-05-20", status: "active" },
-  { id: "s3", email: "nyabuoy.g@example.com", date: "2026-04-11", status: "active" },
-  { id: "s4", email: "mbekele@gmail.com", date: "2026-03-30", status: "active" },
-  { id: "s5", email: "former.reader@example.com", date: "2026-01-14", status: "unsubscribed" },
-];
-
 function NewsletterPage() {
-  const [subs, setSubs] = useState(seedSubscribers);
+  const [subs, setSubs] = useState([]);
+
+  const fetchSubscribers = async () => {
+    try {
+      const res = await fetch(`${API_URL}/newsletter/admin?limit=500`, { headers: getAuthHeaders() });
+      const data = await res.json();
+      setSubs((data.data || []).map(s => ({ ...s, date: s.subscribedAt, status: s.isActive ? 'active' : 'unsubscribed' })));
+    } catch (err) { console.error(err); }
+  };
+
+  useEffect(() => { fetchSubscribers(); }, []);
   const [query, setQuery] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [subject, setSubject] = useState("");
@@ -909,15 +892,22 @@ function NewsletterPage() {
 
   const activeCount = subs.filter((s) => s.status === "active").length;
 
-  function addSubscriber() {
+  async function addSubscriber() {
     const email = newEmail.trim();
     if (!email || !email.includes("@")) { setToast("Enter a valid email"); return; }
-    setSubs((prev) => [{ id: "s" + Date.now(), email, date: new Date().toISOString().slice(0, 10), status: "active" }, ...prev]);
-    setNewEmail("");
-    setToast("Subscriber added");
+    try {
+      await fetch(`${API_URL}/newsletter/subscribe`, { method: 'POST', headers: getAuthHeaders(), body: JSON.stringify({ email }) });
+      fetchSubscribers();
+      setNewEmail("");
+      setToast("Subscriber added");
+    } catch(e) { setToast("Error adding subscriber"); }
   }
   function toggleStatus(s) { setSubs((prev) => prev.map((x) => (x.id === s.id ? { ...x, status: x.status === "active" ? "unsubscribed" : "active" } : x))); }
-  function doDelete(s) { setSubs((prev) => prev.filter((x) => x.id !== s.id)); setConfirmDelete(null); setToast("Subscriber removed"); }
+  function doDelete(s) {
+    fetch(`${API_URL}/newsletter/admin/${s.id}`, { method: 'DELETE', headers: getAuthHeaders() }).then(() => {
+      setSubs((prev) => prev.filter((x) => x.id !== s.id)); setConfirmDelete(null); setToast("Subscriber removed");
+    });
+  }
 
   function exportCsv() {
     const rows = [["Email", "Subscribed", "Status"], ...subs.map((s) => [s.email, s.date, s.status])];
@@ -1004,13 +994,7 @@ const KNOWLEDGE_CATEGORIES = [
   { value: "fun", label: "Fun Facts" },
 ];
 
-const seedKnowledge = [
-  { id: "k1", category: "about", question: "Who is Oriemi and where are they based?", answer: "Oriemi Obang is a full-stack software engineer from Gambella, Ethiopia, running a development studio called Jinina Dev. Fluent in Anywaa, Amharic, and English.", updated: "2026-06-20" },
-  { id: "k2", category: "skills", question: "What's the core tech stack?", answer: "NestJS (TypeScript) on the backend, Flutter for mobile with BLoC, Next.js for admin/web dashboards, PostgreSQL with PostGIS and Prisma, Redis for geo queries, and Socket.IO for realtime tracking.", updated: "2026-06-18" },
-  { id: "k3", category: "projects", question: "What is Oloni?", answer: "Oloni is a ride-hailing and delivery platform built specifically for the Gambella region, covering boda boda, bajaj, car, and cargo bajaj vehicle types, with an airport shuttle as the flagship route.", updated: "2026-07-01" },
-  { id: "k4", category: "availability", question: "Is Oriemi available for freelance work?", answer: "Yes — Jinina Dev takes on select freelance and contract projects alongside ongoing work on Oloni. Best reached through the contact form on this site.", updated: "2026-05-02" },
-  { id: "k5", category: "fun", question: "What languages does Oriemi speak?", answer: "Anywaa, Amharic, and English — and the Oloni app itself supports all three in its UI.", updated: "2026-04-14" },
-];
+
 
 function emptyKnowledgeDraft() {
   return { id: null, category: "about", question: "", answer: "", updated: new Date().toISOString().slice(0, 10) };
@@ -1222,11 +1206,28 @@ import { Menu } from "lucide-react";
 function AdminDashboard({ onLogout }) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [page, setPage] = useState("projects");
+  const [inboxUnread, setInboxUnread] = useState(0);
+
   useEffect(() => {
     const style = document.createElement("style");
     style.innerHTML = FONTS;
     document.head.appendChild(style);
     return () => document.head.removeChild(style);
+  }, []);
+
+  // Fetch unread inbox count for the sidebar badge
+  useEffect(() => {
+    const fetchUnread = async () => {
+      try {
+        const res = await fetch(`${API_URL}/admin/contact?read=false&archived=false&limit=1`, { headers: getAuthHeaders() });
+        const data = await res.json();
+        setInboxUnread(data.total || 0);
+      } catch (err) { console.error(err); }
+    };
+    fetchUnread();
+    // Re-check every 30 seconds for new messages
+    const interval = setInterval(fetchUnread, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const PAGES = {
@@ -1282,7 +1283,11 @@ function AdminDashboard({ onLogout }) {
                 >
                   <Icon size={17} strokeWidth={2} style={{ opacity: active ? 1 : 0.75 }} />
                   {item.label}
-                  {item.key === "inbox" && <UnreadDot />}
+                  {item.key === "inbox" && inboxUnread > 0 && (
+                    <span className="ml-auto flex items-center justify-center rounded-full" style={{ minWidth: 18, height: 18, background: GOLD, color: INK, fontSize: 10.5, fontWeight: 700, padding: "0 5px" }}>
+                      {inboxUnread}
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -1304,13 +1309,3 @@ function AdminDashboard({ onLogout }) {
   );
 }
 
-function UnreadDot() {
-  // static visual indicator that the inbox has unread messages, mirrors seedMessages above
-  const unread = seedMessages.filter((m) => !m.read && !m.archived).length;
-  if (unread === 0) return null;
-  return (
-    <span className="ml-auto flex items-center justify-center rounded-full" style={{ minWidth: 18, height: 18, background: GOLD, color: INK, fontSize: 10.5, fontWeight: 700, padding: "0 5px" }}>
-      {unread}
-    </span>
-  );
-}
