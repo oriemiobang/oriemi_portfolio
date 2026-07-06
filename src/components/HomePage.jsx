@@ -145,13 +145,13 @@ function HomePage() {
                 </div>
 
                 <div className="relative flex w-full flex-1 justify-center lg:justify-center">
-                    <div className="absolute left-0 top-[6%] hidden rounded-[10px] border border-black/10 bg-[#f6f5f1] px-3.5 py-2.5 font-mono text-[12px] text-[#14181f] shadow-[0_10px_24px_-8px_rgba(0,0,0,0.5)] lg:flex lg:-left-3 xl:-left-10">
+                    <div className="absolute left-[2%] top-[8%] z-20 flex items-center rounded-[10px] border border-white/20 bg-white/90 backdrop-blur-sm px-3.5 py-2.5 font-mono text-[12px] text-[#14181f] shadow-[0_10px_24px_-8px_rgba(0,0,0,0.3)]">
                         <span className="mr-2 h-2 w-2 rounded-full bg-[#d6a85c]" /> Flutter
                     </div>
-                    <div className="absolute right-0 top-[38%] hidden rounded-[10px] border border-black/10 bg-[#f6f5f1] px-3.5 py-2.5 font-mono text-[12px] text-[#14181f] shadow-[0_10px_24px_-8px_rgba(0,0,0,0.5)] lg:flex lg:-right-2 xl:-right-8">
+                    <div className="absolute right-[2%] top-[40%] z-20 flex items-center rounded-[10px] border border-white/20 bg-white/90 backdrop-blur-sm px-3.5 py-2.5 font-mono text-[12px] text-[#14181f] shadow-[0_10px_24px_-8px_rgba(0,0,0,0.3)]">
                         <span className="mr-2 h-2 w-2 rounded-full bg-[#4aa79b]" /> Next.js
                     </div>
-                    <div className="absolute bottom-[10%] left-0 hidden rounded-[10px] border border-black/10 bg-[#f6f5f1] px-3.5 py-2.5 font-mono text-[12px] text-[#14181f] shadow-[0_10px_24px_-8px_rgba(0,0,0,0.5)] lg:flex lg:-left-4 xl:-left-10">
+                    <div className="absolute left-[2%] bottom-[12%] z-20 flex items-center rounded-[10px] border border-white/20 bg-white/90 backdrop-blur-sm px-3.5 py-2.5 font-mono text-[12px] text-[#14181f] shadow-[0_10px_24px_-8px_rgba(0,0,0,0.3)]">
                         <span className="mr-2 h-2 w-2 rounded-full bg-[#b98a4a]" /> NestJS
                     </div>
 
