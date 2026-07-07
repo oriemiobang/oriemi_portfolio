@@ -20,11 +20,13 @@ function MainApp() {
   const [view, setView] = useState('main'); // 'main' or 'post-detail'
   const [activePostSlug, setActivePostSlug] = useState(null);
 
+
   const handleOpenPost = (slug) => {
     setActivePostSlug(slug);
     setView('post-detail');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
 
   const handleBack = () => {
     setView('main');
@@ -55,6 +57,7 @@ function MainApp() {
     </div>
   );
 }
+
 
 function Root() {
   if (window.location.pathname.startsWith('/admin')) {
