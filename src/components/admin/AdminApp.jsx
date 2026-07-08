@@ -286,7 +286,8 @@ function ProjectsPage() {
     try {
       const res = await fetch(`${API_URL}/projects?all=true`);
       const data = await res.json();
-      setProjects(data.data || []);
+      // Backend returns a plain array, not { data: [] }
+      setProjects(Array.isArray(data) ? data : (data.data || []));
     } catch (err) { console.error(err); }
   };
 
@@ -305,8 +306,8 @@ function ProjectsPage() {
   const filtered = useMemo(() => {
     return projects
       .filter((p) => (activeCategory === "all" ? true : p.category === activeCategory))
-      .filter((p) => (query.trim() === "" ? true : (p.title + " " + p.client + " " + p.tags.join(" ")).toLowerCase().includes(query.toLowerCase())))
-      .sort((a, b) => new Date(b.date) - new Date(a.date));
+      .filter((p) => (query.trim() === "" ? true : (p.title + " " + p.client + " " + (p.tags || []).join(" ")).toLowerCase().includes(query.toLowerCase())))
+      .sort((a, b) => new Date(b.projectDate || b.date) - new Date(a.projectDate || a.date));
   }, [projects, activeCategory, query]);
 
   const counts = useMemo(() => {
@@ -316,7 +317,12 @@ function ProjectsPage() {
   }, [projects]);
 
   function openAdd() { setDraft(emptyProjectDraft()); setTagInput(""); setModalOpen(true); }
-  function openEdit(p) { setDraft({ ...p }); setTagInput(""); setModalOpen(true); }
+  function openEdit(p) {
+    // Map projectDate → date so the date <input> populates correctly
+    setDraft({ ...p, date: (p.projectDate || p.date || "").slice(0, 10) });
+    setTagInput("");
+    setModalOpen(true);
+  }
   async function saveDraft() {
     if (saving) return;
     setSaving(true);
@@ -462,7 +468,7 @@ function ProjectsPage() {
               {p.tags.slice(0, 2).map((t) => <span key={t} className="px-2 py-0.5 rounded-full" style={{ fontSize: 11, border: `1px solid ${LINE}`, color: INK_SOFT }}>{t}</span>)}
               {p.tags.length > 2 && <span style={{ fontSize: 11, color: INK_SOFT }}>+{p.tags.length - 2}</span>}
             </div>
-            <div style={{ fontSize: 13, color: INK_SOFT, fontFamily: "'JetBrains Mono', monospace" }}>{formatDate(p.date)}</div>
+            <div style={{ fontSize: 13, color: INK_SOFT, fontFamily: "'JetBrains Mono', monospace" }}>{formatDate(p.projectDate || p.date)}</div>
             <div className="flex items-center justify-end gap-2">
               <button onClick={() => openEdit(p)} className="p-2 rounded-lg" style={{ border: `1px solid ${LINE}`, color: INK }} title="Edit"><Pencil size={14} /></button>
               <button onClick={() => setConfirmDelete(p)} className="p-2 rounded-lg" style={{ border: `1px solid ${RED_BG}`, color: RED }} title="Delete"><Trash2 size={14} /></button>
