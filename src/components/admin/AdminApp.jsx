@@ -624,7 +624,7 @@ const BLOG_BADGE_COLOR = {
 
 
 function emptyPostDraft() {
-  return { id: null, title: "", category: "projects", status: "draft", type: "read", readTime: 5, date: new Date().toISOString().slice(0, 10), excerpt: "", content: "", coverUrl: "", tags: [], featured: false };
+  return { id: null, title: "", category: "projects", status: "published", type: "read", readTime: 5, date: new Date().toISOString().slice(0, 10), excerpt: "", content: "", coverUrl: "", tags: [], featured: false };
 }
 
 function BlogPage() {
@@ -652,6 +652,10 @@ function BlogPage() {
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [toast, setToast] = useToast();
   const fileInputRef = useRef(null);
+  const [tagInput, setTagInput] = useState("");
+
+  function addTag() { const t = tagInput.trim(); if (!t) return; if (!draft.tags.includes(t)) setDraft((d) => ({ ...d, tags: [...d.tags, t] })); setTagInput(""); }
+  function removeTag(tag) { setDraft((d) => ({ ...d, tags: d.tags.filter((t) => t !== tag) })); }
 
   const filtered = useMemo(() => {
     return posts
@@ -666,10 +670,11 @@ function BlogPage() {
     draft: posts.filter((p) => p.status === "draft").length,
   }), [posts]);
 
-  function openAdd() { setDraft(emptyPostDraft()); setModalOpen(true); }
+  function openAdd() { setDraft(emptyPostDraft()); setTagInput(""); setModalOpen(true); }
   function openEdit(p) {
     // Map publishedAt → date so the date input populates correctly
     setDraft({ ...p, date: (p.publishedAt || p.createdAt || new Date().toISOString()).slice(0, 10), tags: p.tags || [], content: p.content || '' });
+    setTagInput("");
     setModalOpen(true);
   }
   async function saveDraft() {
@@ -885,6 +890,27 @@ function BlogPage() {
                 {draft.coverUrl && !uploadingImage && (
                   <img src={draft.coverUrl} alt="" className="w-11 h-11 rounded-lg object-cover" style={{ border: `1px solid ${LINE}` }} />
                 )}
+              </div>
+            </Field>
+
+            <Field label="Tags">
+              <div className="flex flex-wrap gap-1.5 mb-2">
+                {(draft.tags || []).map((t) => (
+                  <span key={t} className="flex items-center gap-1 px-2.5 py-0.5 rounded-full" style={{ fontSize: 11, border: `1px solid ${LINE}`, color: INK_SOFT }}>
+                    {t}
+                    <button type="button" onClick={() => removeTag(t)} style={{ color: INK_SOFT, lineHeight: 1 }}>\u00d7</button>
+                  </span>
+                ))}
+              </div>
+              <div className="flex gap-2">
+                <input
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addTag(); } }}
+                  placeholder="Type a tag and press Enter"
+                  style={{ ...inputStyle, flex: 1 }}
+                />
+                <button type="button" onClick={addTag} className="px-4 py-2 rounded-lg font-semibold" style={{ background: INK, color: '#fff', fontSize: 13, whiteSpace: 'nowrap' }}>Add</button>
               </div>
             </Field>
 
