@@ -624,17 +624,23 @@ const BLOG_BADGE_COLOR = {
 
 
 function emptyPostDraft() {
-  return { id: null, title: "", category: "projects", status: "draft", type: "read", readTime: 5, date: new Date().toISOString().slice(0, 10), excerpt: "", coverUrl: "", featured: false };
+  return { id: null, title: "", category: "projects", status: "draft", type: "read", readTime: 5, date: new Date().toISOString().slice(0, 10), excerpt: "", content: "", coverUrl: "", tags: [], featured: false };
 }
 
 function BlogPage() {
   const [posts, setPosts] = useState([]);
+  const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const fetchPosts = async () => {
     try {
-      const res = await fetch(`${API_URL}/blog?all=true`);
+      // Use the admin endpoint so drafts are included
+      const res = await fetch(`${API_URL}/admin/blog?limit=100`, { headers: getAuthHeaders() });
       const data = await res.json();
-      setPosts(data.data || []);
+      // Admin endpoint returns { data: [], total, page }
+      const posts = Array.isArray(data) ? data : (data.data || []);
+      // Normalise: map publishedAt/createdAt → date for display consistency
+      setPosts(posts.map(p => ({ ...p, date: (p.publishedAt || p.createdAt || '').slice(0, 10) })));
     } catch (err) { console.error(err); }
   };
 
@@ -650,8 +656,8 @@ function BlogPage() {
   const filtered = useMemo(() => {
     return posts
       .filter((p) => (activeCategory === "all" ? true : p.category === activeCategory))
-      .filter((p) => (query.trim() === "" ? true : (p.title + " " + p.excerpt).toLowerCase().includes(query.toLowerCase())))
-      .sort((a, b) => new Date(b.date) - new Date(a.date));
+      .filter((p) => (query.trim() === "" ? true : (p.title + " " + (p.excerpt || "")).toLowerCase().includes(query.toLowerCase())))
+      .sort((a, b) => new Date(b.publishedAt || b.createdAt) - new Date(a.publishedAt || a.createdAt));
   }, [posts, activeCategory, query]);
 
   const counts = useMemo(() => ({
@@ -661,34 +667,96 @@ function BlogPage() {
   }), [posts]);
 
   function openAdd() { setDraft(emptyPostDraft()); setModalOpen(true); }
-  function openEdit(p) { setDraft({ ...p }); setModalOpen(true); }
+  function openEdit(p) {
+    // Map publishedAt → date so the date input populates correctly
+    setDraft({ ...p, date: (p.publishedAt || p.createdAt || new Date().toISOString()).slice(0, 10), tags: p.tags || [], content: p.content || '' });
+    setModalOpen(true);
+  }
   async function saveDraft() {
+    if (saving) return;
+    setSaving(true);
     const isNew = !draft.id;
     const url = isNew ? `${API_URL}/admin/blog` : `${API_URL}/admin/blog/${draft.id}`;
     const method = isNew ? 'POST' : 'PUT';
-    
-    const payload = { ...draft, readTime: parseInt(draft.readTime) || 0, publishedAt: draft.date };
-    if (!payload.content) payload.content = '';
-    
+
+    // Build a clean payload with only DTO-allowed fields
+    // excerpt @IsNotEmpty — auto-fill from title if blank so save never fails silently
+    const payload = {
+      title: draft.title,
+      category: draft.category,
+      excerpt: draft.excerpt.trim() || draft.title,
+      content: draft.content || '',
+      coverUrl: draft.coverUrl || '',
+      tags: draft.tags || [],
+      readTime: parseInt(draft.readTime) || 5,
+      type: draft.type || 'read',
+      featured: draft.featured ?? false,
+      status: draft.status || 'draft',
+      publishedAt: draft.date || new Date().toISOString().slice(0, 10),
+    };
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 20000);
     try {
-      const res = await fetch(url, { method, headers: getAuthHeaders(), body: JSON.stringify(payload) });
+      const res = await fetch(url, { method, headers: getAuthHeaders(), body: JSON.stringify(payload), signal: controller.signal });
+      clearTimeout(timeout);
       if (res.ok) {
-        fetchPosts();
-        setToast("Post saved");
+        await fetchPosts();
+        setToast(isNew ? '✓ Post saved!' : '✓ Post updated!');
         setModalOpen(false);
       } else {
-        const d = await res.json();
-        setToast("Error: " + (d.message || "Failed"));
+        let errMsg = `Error ${res.status}`;
+        try {
+          const d = await res.json();
+          errMsg = 'Error: ' + (Array.isArray(d.message) ? d.message[0] : (d.message || errMsg));
+        } catch(_) {}
+        setToast(errMsg);
       }
-    } catch(e) { setToast("Error saving"); }
+    } catch(e) {
+      clearTimeout(timeout);
+      if (e.name === 'AbortError') {
+        setToast('Request timed out — server may be waking up, try again');
+      } else {
+        setToast('Network error: ' + (e.message || 'Could not reach server'));
+      }
+    } finally {
+      setSaving(false);
+    }
   }
-  function handleImageFile(e) { const file = e.target.files?.[0]; if (!file) return; const r = new FileReader(); r.onload = () => setDraft((d) => ({ ...d, coverUrl: r.result })); r.readAsDataURL(file); }
-  function doDelete(p) { 
-    fetch(`${API_URL}/admin/blog/${p.id}`, { method: 'DELETE', headers: getAuthHeaders() }).then(() => { 
-      setPosts((prev) => prev.filter((x) => x.id !== p.id)); 
-      setConfirmDelete(null); 
-      setToast("Post deleted"); 
-    }); 
+  async function handleImageFile(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = '';
+    setUploadingImage(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', 'blog');
+      const res = await fetch(`${API_URL}/admin/upload/image`, {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
+        body: formData,
+      });
+      if (res.ok) {
+        const { url } = await res.json();
+        setDraft((d) => ({ ...d, coverUrl: url }));
+        setToast('✓ Image uploaded to Cloudflare R2');
+      } else {
+        const d = await res.json().catch(() => ({}));
+        setToast('Image upload failed: ' + (d.message || res.status));
+      }
+    } catch (err) {
+      setToast('Image upload error: ' + (err.message || 'Network error'));
+    } finally {
+      setUploadingImage(false);
+    }
+  }
+  function doDelete(p) {
+    fetch(`${API_URL}/admin/blog/${p.id}`, { method: 'DELETE', headers: getAuthHeaders() }).then(() => {
+      setPosts((prev) => prev.filter((x) => x.id !== p.id));
+      setConfirmDelete(null);
+      setToast("Post deleted");
+    });
   }
   function togglePublish(p) { setPosts((prev) => prev.map((x) => (x.id === p.id ? { ...x, status: x.status === "published" ? "draft" : "published" } : x))); }
 
@@ -736,7 +804,7 @@ function BlogPage() {
                   {p.status === "published" ? <CheckCircle2 size={11} /> : <Pencil size={11} />}{p.status}
                 </button>
               </div>
-              <div style={{ fontSize: 13, color: INK_SOFT, fontFamily: "'JetBrains Mono', monospace" }}>{formatDate(p.date)}</div>
+              <div style={{ fontSize: 13, color: INK_SOFT, fontFamily: "'JetBrains Mono', monospace" }}>{formatDate(p.publishedAt || p.createdAt)}</div>
               <div className="flex items-center justify-end gap-2">
                 <button onClick={() => openEdit(p)} className="p-2 rounded-lg" style={{ border: `1px solid ${LINE}`, color: INK }}><Pencil size={14} /></button>
                 <button onClick={() => setConfirmDelete(p)} className="p-2 rounded-lg" style={{ border: `1px solid ${RED_BG}`, color: RED }}><Trash2 size={14} /></button>
@@ -796,11 +864,27 @@ function BlogPage() {
 
             <Field label="Cover image">
               <div className="flex items-center gap-3">
-                <button onClick={() => fileInputRef.current?.click()} className="flex items-center gap-2 px-4 py-2.5 rounded-lg" style={{ border: `1px dashed ${INK_SOFT}`, color: INK_SOFT, fontSize: 13 }}>
-                  <ImagePlus size={15} />{draft.coverUrl ? "Replace image" : "Upload image"}
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploadingImage}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-lg disabled:opacity-50"
+                  style={{ border: `1px dashed ${INK_SOFT}`, color: INK_SOFT, fontSize: 13 }}
+                >
+                  {uploadingImage ? (
+                    <>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ animation: 'spin 0.8s linear infinite' }}>
+                        <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                      </svg>
+                      Uploading…
+                    </>
+                  ) : (
+                    <><ImagePlus size={15} />{draft.coverUrl ? 'Replace image' : 'Upload image'}</>
+                  )}
                 </button>
                 <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageFile} className="hidden" />
-                {draft.coverUrl && <img src={draft.coverUrl} alt="" className="w-11 h-11 rounded-lg object-cover" style={{ border: `1px solid ${LINE}` }} />}
+                {draft.coverUrl && !uploadingImage && (
+                  <img src={draft.coverUrl} alt="" className="w-11 h-11 rounded-lg object-cover" style={{ border: `1px solid ${LINE}` }} />
+                )}
               </div>
             </Field>
 
@@ -810,8 +894,22 @@ function BlogPage() {
             </label>
 
             <div className="flex items-center gap-3 mt-7">
-              <button onClick={saveDraft} disabled={!draft.title.trim()} className="px-6 py-3 rounded-lg font-semibold disabled:opacity-40" style={{ background: INK, color: "#fff", fontSize: 14 }}>{draft.id ? "Save changes" : "Save post"}</button>
-              <button onClick={() => setModalOpen(false)} className="px-5 py-3 rounded-lg font-semibold" style={{ color: INK_SOFT, fontSize: 14 }}>Cancel</button>
+              <button
+                onClick={saveDraft}
+                disabled={!draft.title.trim() || saving}
+                className="flex items-center gap-2 px-6 py-3 rounded-lg font-semibold disabled:opacity-50"
+                style={{ background: INK, color: "#fff", fontSize: 14, minWidth: 130 }}
+              >
+                {saving ? (
+                  <>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ animation: 'spin 0.8s linear infinite' }}>
+                      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                    </svg>
+                    Saving…
+                  </>
+                ) : (draft.id ? "Save changes" : "Save post")}
+              </button>
+              <button onClick={() => setModalOpen(false)} disabled={saving} className="px-5 py-3 rounded-lg font-semibold disabled:opacity-40" style={{ color: INK_SOFT, fontSize: 14 }}>Cancel</button>
             </div>
           </div>
         </ModalShell>
