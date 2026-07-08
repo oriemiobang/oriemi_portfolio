@@ -279,6 +279,7 @@ function emptyProjectDraft() {
 
 function ProjectsPage() {
   const [projects, setProjects] = useState([]);
+  const [saving, setSaving] = useState(false);
   
   const fetchProjects = async () => {
     try {
@@ -316,26 +317,45 @@ function ProjectsPage() {
   function openAdd() { setDraft(emptyProjectDraft()); setTagInput(""); setModalOpen(true); }
   function openEdit(p) { setDraft({ ...p }); setTagInput(""); setModalOpen(true); }
   async function saveDraft() {
+    if (saving) return;
+    setSaving(true);
     const isNew = !draft.id;
     const url = isNew ? `${API_URL}/admin/projects` : `${API_URL}/admin/projects/${draft.id}`;
     const method = isNew ? 'POST' : 'PUT';
     
-    const payload = { ...draft, sortOrder: 0, projectDate: draft.date };
+    const payload = { ...draft, projectDate: draft.date };
+    delete payload.sortOrder;
     if (!payload.shortDescription) payload.shortDescription = payload.description.substring(0, 100);
     if (!payload.categoryLabel) payload.categoryLabel = payload.category;
     if (!payload.imageUrl) payload.imageUrl = '';
     
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 20000);
     try {
-      const res = await fetch(url, { method, headers: getAuthHeaders(), body: JSON.stringify(payload) });
+      const res = await fetch(url, { method, headers: getAuthHeaders(), body: JSON.stringify(payload), signal: controller.signal });
+      clearTimeout(timeout);
       if (res.ok) {
-        fetchProjects();
-        setToast("Project saved");
+        await fetchProjects();
+        setToast(isNew ? "✓ Project added!" : "✓ Project updated!");
         setModalOpen(false);
       } else {
-        const d = await res.json();
-        setToast("Error: " + (d.message || "Failed"));
+        let errMsg = `Error ${res.status}`;
+        try {
+          const d = await res.json();
+          errMsg = "Error: " + (Array.isArray(d.message) ? d.message[0] : (d.message || errMsg));
+        } catch(_) {}
+        setToast(errMsg);
       }
-    } catch(e) { setToast("Error saving"); }
+    } catch(e) {
+      clearTimeout(timeout);
+      if (e.name === 'AbortError') {
+        setToast("Request timed out — server may be waking up, try again");
+      } else {
+        setToast("Network error: " + (e.message || "Could not reach server"));
+      }
+    } finally {
+      setSaving(false);
+    }
   }
   function addTag() { const t = tagInput.trim(); if (!t) return; if (!draft.tags.includes(t)) setDraft((d) => ({ ...d, tags: [...d.tags, t] })); setTagInput(""); }
   function removeTag(tag) { setDraft((d) => ({ ...d, tags: d.tags.filter((t) => t !== tag) })); }
@@ -471,9 +491,24 @@ function ProjectsPage() {
             </label>
 
             <div className="flex items-center gap-3 mt-7">
-              <button onClick={saveDraft} disabled={!draft.title.trim()} className="px-6 py-3 rounded-lg font-semibold disabled:opacity-40" style={{ background: INK, color: "#fff", fontSize: 14 }}>{draft.id ? "Save changes" : "Add project"}</button>
-              <button onClick={() => setModalOpen(false)} className="px-5 py-3 rounded-lg font-semibold" style={{ color: INK_SOFT, fontSize: 14 }}>Cancel</button>
+              <button
+                onClick={saveDraft}
+                disabled={!draft.title.trim() || saving}
+                className="flex items-center gap-2 px-6 py-3 rounded-lg font-semibold disabled:opacity-50"
+                style={{ background: INK, color: "#fff", fontSize: 14, minWidth: 130 }}
+              >
+                {saving ? (
+                  <>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ animation: 'spin 0.8s linear infinite' }}>
+                      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                    </svg>
+                    Saving…
+                  </>
+                ) : (draft.id ? "Save changes" : "Add project")}
+              </button>
+              <button onClick={() => setModalOpen(false)} disabled={saving} className="px-5 py-3 rounded-lg font-semibold disabled:opacity-40" style={{ color: INK_SOFT, fontSize: 14 }}>Cancel</button>
             </div>
+            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
           </div>
 
           <div className="hidden md:flex flex-col shrink-0 overflow-y-auto" style={{ width: 340, background: PAPER, borderLeft: `1px solid ${LINE}` }}>
