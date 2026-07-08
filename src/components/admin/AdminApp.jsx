@@ -323,11 +323,23 @@ function ProjectsPage() {
     const url = isNew ? `${API_URL}/admin/projects` : `${API_URL}/admin/projects/${draft.id}`;
     const method = isNew ? 'POST' : 'PUT';
     
-    const payload = { ...draft, projectDate: draft.date };
-    delete payload.sortOrder;
-    if (!payload.shortDescription) payload.shortDescription = payload.description.substring(0, 100);
-    if (!payload.categoryLabel) payload.categoryLabel = payload.category;
-    if (!payload.imageUrl) payload.imageUrl = '';
+    // Build a clean payload — only fields the DTO allows.
+    // Extra fields (id, date, sortOrder) cause the NestJS ValidationPipe
+    // (forbidNonWhitelisted: true) to return 400, which was silently swallowed.
+    const payload = {
+      title: draft.title,
+      description: draft.description,
+      shortDescription: draft.description.substring(0, 100),
+      category: draft.category,
+      categoryLabel: draft.category,
+      client: draft.client,
+      projectDate: draft.date,
+      liveUrl: draft.liveUrl || '',
+      sourceUrl: draft.sourceUrl || '',
+      imageUrl: draft.imageUrl || '',
+      tags: draft.tags,
+      featured: draft.featured ?? false,
+    };
     
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 20000);
@@ -359,7 +371,31 @@ function ProjectsPage() {
   }
   function addTag() { const t = tagInput.trim(); if (!t) return; if (!draft.tags.includes(t)) setDraft((d) => ({ ...d, tags: [...d.tags, t] })); setTagInput(""); }
   function removeTag(tag) { setDraft((d) => ({ ...d, tags: d.tags.filter((t) => t !== tag) })); }
-  function handleImageFile(e) { const file = e.target.files?.[0]; if (!file) return; const r = new FileReader(); r.onload = () => setDraft((d) => ({ ...d, imageUrl: r.result })); r.readAsDataURL(file); }
+  function handleImageFile(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const img = new Image();
+      img.onload = () => {
+        // Resize to max 800px on the longest side, compress to JPEG 80%
+        const MAX = 800;
+        let { width, height } = img;
+        if (width > MAX || height > MAX) {
+          if (width > height) { height = Math.round((height * MAX) / width); width = MAX; }
+          else { width = Math.round((width * MAX) / height); height = MAX; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        const compressed = canvas.toDataURL('image/jpeg', 0.8);
+        setDraft((d) => ({ ...d, imageUrl: compressed }));
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
   function doDelete(p) { 
     fetch(`${API_URL}/admin/projects/${p.id}`, { method: 'DELETE', headers: getAuthHeaders() }).then(() => { 
       setProjects((prev) => prev.filter((x) => x.id !== p.id)); 
