@@ -280,6 +280,7 @@ function emptyProjectDraft() {
 function ProjectsPage() {
   const [projects, setProjects] = useState([]);
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   
   const fetchProjects = async () => {
     try {
@@ -371,30 +372,34 @@ function ProjectsPage() {
   }
   function addTag() { const t = tagInput.trim(); if (!t) return; if (!draft.tags.includes(t)) setDraft((d) => ({ ...d, tags: [...d.tags, t] })); setTagInput(""); }
   function removeTag(tag) { setDraft((d) => ({ ...d, tags: d.tags.filter((t) => t !== tag) })); }
-  function handleImageFile(e) {
+  async function handleImageFile(e) {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const img = new Image();
-      img.onload = () => {
-        // Resize to max 800px on the longest side, compress to JPEG 80%
-        const MAX = 800;
-        let { width, height } = img;
-        if (width > MAX || height > MAX) {
-          if (width > height) { height = Math.round((height * MAX) / width); width = MAX; }
-          else { width = Math.round((width * MAX) / height); height = MAX; }
-        }
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-        const compressed = canvas.toDataURL('image/jpeg', 0.8);
-        setDraft((d) => ({ ...d, imageUrl: compressed }));
-      };
-      img.src = ev.target.result;
-    };
-    reader.readAsDataURL(file);
+    // Reset input so the same file can be re-selected if needed
+    e.target.value = '';
+    setUploadingImage(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', 'projects');
+      const res = await fetch(`${API_URL}/admin/upload/image`, {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
+        body: formData,
+      });
+      if (res.ok) {
+        const { url } = await res.json();
+        setDraft((d) => ({ ...d, imageUrl: url }));
+        setToast('\u2713 Image uploaded to Cloudflare R2');
+      } else {
+        const d = await res.json().catch(() => ({}));
+        setToast('Image upload failed: ' + (d.message || res.status));
+      }
+    } catch (err) {
+      setToast('Image upload error: ' + (err.message || 'Network error'));
+    } finally {
+      setUploadingImage(false);
+    }
   }
   function doDelete(p) { 
     fetch(`${API_URL}/admin/projects/${p.id}`, { method: 'DELETE', headers: getAuthHeaders() }).then(() => { 
@@ -513,11 +518,27 @@ function ProjectsPage() {
 
             <Field label="Cover image">
               <div className="flex items-center gap-3">
-                <button onClick={() => fileInputRef.current?.click()} className="flex items-center gap-2 px-4 py-2.5 rounded-lg" style={{ border: `1px dashed ${INK_SOFT}`, color: INK_SOFT, fontSize: 13 }}>
-                  <ImagePlus size={15} />{draft.imageUrl ? "Replace image" : "Upload image"}
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploadingImage}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-lg disabled:opacity-50"
+                  style={{ border: `1px dashed ${INK_SOFT}`, color: INK_SOFT, fontSize: 13 }}
+                >
+                  {uploadingImage ? (
+                    <>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ animation: 'spin 0.8s linear infinite' }}>
+                        <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                      </svg>
+                      Uploading…
+                    </>
+                  ) : (
+                    <><ImagePlus size={15} />{draft.imageUrl ? 'Replace image' : 'Upload image'}</>
+                  )}
                 </button>
                 <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageFile} className="hidden" />
-                {draft.imageUrl && <img src={draft.imageUrl} alt="" className="w-11 h-11 rounded-lg object-cover" style={{ border: `1px solid ${LINE}` }} />}
+                {draft.imageUrl && !uploadingImage && (
+                  <img src={draft.imageUrl} alt="" className="w-11 h-11 rounded-lg object-cover" style={{ border: `1px solid ${LINE}` }} />
+                )}
               </div>
             </Field>
 
