@@ -144,7 +144,7 @@ function Portfolio() {
                                 <img
                                     src={selectedProject.imageUrl}
                                     alt={`${selectedProject.title} preview`}
-                                    className="h-full w-full object-cover"
+                                    className="h-full w-full object-contain p-6"
                                 />
                             ) : (
                                 /* Placeholder when no image */
@@ -173,8 +173,8 @@ function Portfolio() {
 
                             {/* Mobile image (shown only on small screens since left panel is hidden) */}
                             {selectedProject.imageUrl && (
-                                <div className="mb-6 overflow-hidden rounded-[14px] md:hidden">
-                                    <img src={selectedProject.imageUrl} alt={selectedProject.title} className="h-48 w-full object-cover" />
+                                <div className="mb-6 overflow-hidden rounded-[14px] bg-[#16324a] md:hidden">
+                                    <img src={selectedProject.imageUrl} alt={selectedProject.title} className="h-48 w-full object-contain p-4" />
                                 </div>
                             )}
 
