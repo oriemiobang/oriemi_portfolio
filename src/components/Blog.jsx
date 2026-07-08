@@ -16,12 +16,19 @@ function Blog({ onOpenPost }) {
 
   const tabs = ['All Posts', 'Projects', 'Tutorial', 'Video', 'Life & Notes'];
 
+  const categoryMap = {
+    'projects': 'Projects',
+    'tutorial': 'Tutorial',
+    'video': 'Video',
+    'life': 'Life & Notes'
+  };
+
   const featuredPost = blogPosts.find(p => p.featured);
   const gridPosts = blogPosts.filter(p => !p.featured);
 
   const displayedPosts = activeTab === 'All Posts' 
     ? gridPosts 
-    : gridPosts.filter(p => (p.categoryLabel || p.category).toLowerCase() === activeTab.toLowerCase());
+    : gridPosts.filter(p => categoryMap[p.category] === activeTab);
 
   const formatDate = (iso) => {
     if (!iso) return "—";
@@ -66,7 +73,7 @@ function Blog({ onOpenPost }) {
           </div>
           <div className="fp-body">
             <div className="fp-meta">
-              <span>{featuredPost.category.toUpperCase()}</span>
+              <span>{(categoryMap[featuredPost.category] || featuredPost.category).toUpperCase()}</span>
               <span className="dot-sep"></span>
               <span>{formatDate(featuredPost.publishedAt || featuredPost.createdAt)}</span>
               <span className="dot-sep"></span>
@@ -87,7 +94,7 @@ function Blog({ onOpenPost }) {
         {displayedPosts.map((post) => (
           <div key={post.id} className="blog-card">
             <div className="blog-thumb" style={{ backgroundImage: `url('${post.coverUrl}')` }}>
-              <span className="category-pill">{post.category}</span>
+              <span className="category-pill">{categoryMap[post.category] || post.category}</span>
               {post.type === 'watch' && (
                 <div className="play-overlay"><div className="play-btn"><svg viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20"/></svg></div></div>
               )}
