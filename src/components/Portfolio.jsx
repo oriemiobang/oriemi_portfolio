@@ -1,130 +1,30 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FaGithub } from 'react-icons/fa';
 import { FiExternalLink, FiX } from 'react-icons/fi';
-import quiz from '../assets/moblie/quiz_1.jpg';
-import bible from '../assets/moblie/mob_1.jpg';
-import dha from '../assets/moblie/dha_1.jpg';
-import deep from '../assets/web/web_1.jpg';
-import port from '../assets/web/port_3.png';
-import music from '../assets/desktop/music_1.png';
-import pngImage from '../assets/moblie/png.png';
+import { api } from '../services/api';
 
 function Portfolio() {
     const [activeFilter, setActiveFilter] = useState('all');
     const [selectedProject, setSelectedProject] = useState(null);
+    const [projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const projects = [
-        {
-            id: 1,
-            title: 'Dha Anywaa Challenge',
-            shortDescription: 'Flutter language-learning game with quizzes and leaderboards.',
-            description:
-                'Dha Anywaa Challenge is an interactive app designed to promote the Anywaa language and culture through fun and engaging challenges. Built with Flutter, it provides vocabulary quizzes, trivia games, and leaderboards to make learning enjoyable. The backend is powered by Firebase, enabling real-time data sync and user authentication.',
-            image: quiz,
-            category: 'app',
-            categoryLabel: 'Mobile App',
-            client: 'Anywaa Enlightment',
-            date: '1 March 2024',
-            sourceUrl: 'https://github.com/oriemiobang/dha_anywaa_challange',
-            liveUrl: 'https://github.com/oriemiobang/dha_anywaa_challange',
-            tags: ['Flutter', 'Firebase', 'Dart', 'Realtime DB'],
-        },
-        {
-            id: 2,
-            title: 'PNG Game',
-            shortDescription: 'A multiplayer number guessing game.',
-            description:
-                'A multiplayer number guessing game where two players play online by holding a 4-digit code. Each player tries to guess the other\'s number, receiving feedback on correct numbers and correct positions. PNG stands for Position Number Guessing game.',
-            image: pngImage,
-            category: 'app',
-            categoryLabel: 'Mobile App',
-            client: 'Personal Project',
-            date: '1 March 2025',
-            sourceUrl: 'https://github.com/oriemiobang/png_game',
-            liveUrl: 'https://github.com/oriemiobang/png_game',
-            tags: ['Flutter', 'NestJS', 'WebSockets'],
-        },
-        {
-            id: 3,
-            title: 'Multi-Version Bible App',
-            shortDescription: '10 translations side by side, built for accessibility.',
-            description:
-                'A multilingual Bible reading app offering multiple translations with a focus on accessibility and smooth reading experience for diverse users.',
-            image: bible,
-            category: 'app',
-            categoryLabel: 'Mobile App',
-            client: 'Anywaa Community',
-            date: '15 Jan 2024',
-            sourceUrl: 'https://github.com/oriemiobang/weel_jwok_audio_bible',
-            liveUrl: 'https://github.com/oriemiobang/weel_jwok_audio_bible',
-            tags: ['Flutter', 'Firebase'],
-        },
-        {
-            id: 4,
-            title: 'Dha Anywaa and Dha Anywaa Quiz',
-            shortDescription: 'Language learning apps with visual dictionary and quizzes.',
-            description:
-                'A pair of Flutter apps for learning Anywaa language, combining vocabulary building, quizzes, and culturally grounded learning interactions.',
-            image: dha,
-            category: 'app',
-            categoryLabel: 'Mobile App',
-            client: 'Anywaa Community',
-            date: '10 Dec 2023',
-            sourceUrl: 'https://github.com/oriemiobang/Dha-Anywaa-application',
-            liveUrl: 'https://github.com/oriemiobang/Dha-Anywaa-application',
-            tags: ['Flutter', 'Localization'],
-        },
-        {
-            id: 5,
-            title: 'Personal Portfolio Website',
-            shortDescription: 'Responsive portfolio site for projects and profile.',
-            description:
-                'An earlier version of my personal portfolio, designed to present work, experience, and direct contact details in a responsive format.',
-            image: port,
-            category: 'web',
-            categoryLabel: 'Web',
-            client: 'Myself',
-            date: '27 Feb 2024',
-            sourceUrl: 'https://github.com/oriemiobang/portfolio',
-            liveUrl: 'https://github.com/oriemiobang/portfolio',
-            tags: ['HTML/CSS', 'JavaScript'],
-        },
-        {
-            id: 6,
-            title: 'DeepLabs Team Site',
-            shortDescription: 'Shared portfolio site for a collaborative team.',
-            description:
-                'A collaborative portfolio platform built with a small team to showcase combined project work and streamline communication with potential clients.',
-            image: deep,
-            category: 'web',
-            categoryLabel: 'Web',
-            client: 'Deep & Labs',
-            date: '19 Jun 2024',
-            sourceUrl: 'https://github.com/oriemiobang/invincible_site',
-            liveUrl: 'https://github.com/oriemiobang/invincible_site',
-            tags: ['React', 'Team Project'],
-        },
-        {
-            id: 7,
-            title: 'Be-Gena Player',
-            shortDescription: 'Java desktop music player with playlist controls.',
-            description:
-                'A Java desktop music player featuring playlist management and a custom now-playing interface with focus on usability and smooth interaction.',
-            image: music,
-            category: 'desktop',
-            categoryLabel: 'Desktop',
-            client: 'Class Project',
-            date: '10 March 2023',
-            sourceUrl: 'https://github.com/MisganaGetachew/BeGena-Player',
-            liveUrl: 'https://github.com/MisganaGetachew/BeGena-Player',
-            tags: ['Java', 'Desktop'],
-        },
-    ];
+    useEffect(() => {
+        api.getProjects()
+            .then(data => {
+                setProjects(data);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error(err);
+                setLoading(false);
+            });
+    }, []);
 
     const filteredProjects = useMemo(() => {
         if (activeFilter === 'all') return projects;
         return projects.filter((project) => project.category === activeFilter);
-    }, [activeFilter]);
+    }, [activeFilter, projects]);
 
     useEffect(() => {
         const onKeyDown = (event) => {
@@ -186,7 +86,7 @@ function Portfolio() {
                 {filteredProjects.map((project) => (
                     <article key={project.id} className="group overflow-hidden rounded-2xl border border-[rgba(22,50,74,0.10)] bg-white transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_18px_34px_-18px_rgba(22,50,74,0.3)]">
                         <div className="relative aspect-[4/3] overflow-hidden bg-[#f8f7f3]">
-                            <img src={project.image} alt={project.title} className="h-full w-full object-cover" />
+                            <img src={project.imageUrl || project.image} alt={project.title} className="h-full w-full object-cover" />
                             <div className="absolute inset-0 flex items-center justify-center gap-4 bg-[rgba(22,50,74,0.82)] opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                                 <a href={project.sourceUrl} target="_blank" rel="noreferrer" aria-label="View code" className="flex h-[42px] w-[42px] items-center justify-center rounded-full border border-white/35 bg-white/15 text-white transition-all duration-200 hover:-translate-y-0.5 hover:border-[#d6a85c] hover:bg-[#d6a85c]">
                                     <FaGithub size={18} />

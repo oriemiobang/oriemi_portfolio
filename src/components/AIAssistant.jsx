@@ -1,34 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { api } from '../services/api';
 import './AIAssistant.css';
-
-const knowledge = [
-  { keys: ['skill','stack','tech','technology','flutter','next','nest'],
-    reply: "Oriemi works mainly in Flutter for mobile and desktop apps, and a Next.js + NestJS stack for full-stack web projects — plus TypeScript, PostgreSQL, and Firebase depending on the project." },
-  { keys: ['project','portfolio','built','work you','app'],
-    reply: "He's shipped mobile apps, full-stack web platforms, and cross-platform desktop tools. Check the Portfolio page for case studies, or ask me about a specific type of project." },
-  { keys: ['available','hire','freelance','work with','open to'],
-    reply: "Yes — Oriemi is currently open to new freelance and full-time opportunities. Response time is usually within 24–48 hours." },
-  { keys: ['contact','reach','email','phone','get in touch'],
-    reply: "The fastest way is email at oriemiobango@gmail.com, or use the form on the Contact page for project inquiries." },
-  { keys: ['location','based','where','ethiopia','gambella'],
-    reply: "Oriemi is based in Gambella, Ethiopia, and works remotely with clients worldwide." },
-  { keys: ['experience','background','years','about'],
-    reply: "He's a full-stack developer with hands-on experience across mobile, web, and desktop — see the About and Resume pages for the full story." }
-];
-
-function getReply(text){
-  const t = text.toLowerCase();
-  for(const item of knowledge){
-    if(item.keys.some(k => t.includes(k))) return item.reply;
-  }
-  return "That's a great question — I don't have a canned answer for that yet, but you can reach Oriemi directly through the Contact page and he'll follow up personally.";
-}
 
 function AIAssistant() {
   const [messages, setMessages] = useState([
     { sender: 'bot', text: "Hi! I'm Oriemi's AI assistant. Ask me about his skills, projects, experience, or how to get in touch — I'll do my best to help." }
   ]);
   const [inputValue, setInputValue] = useState('');
+  const [sessionId] = useState(() => Math.random().toString(36).substring(7));
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -42,14 +21,14 @@ function AIAssistant() {
   const handleSend = (text) => {
     if(!text.trim()) return;
     
-    // Add user message
     setMessages(prev => [...prev, { sender: 'user', text }]);
     setInputValue('');
     
-    // Simulate thinking and then bot response
-    setTimeout(() => {
-      setMessages(prev => [...prev, { sender: 'bot', text: getReply(text) }]);
-    }, 500);
+    api.chat(text, sessionId).then(res => {
+      setMessages(prev => [...prev, { sender: 'bot', text: res.reply }]);
+    }).catch(err => {
+      setMessages(prev => [...prev, { sender: 'bot', text: "Sorry, I'm having trouble connecting right now." }]);
+    });
   };
 
   return (

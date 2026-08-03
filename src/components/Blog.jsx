@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Blog.css';
-import { mockBlogPosts } from '../data/mockBlogData.jsx';
+import { api } from '../services/api';
 
 function Blog({ onOpenPost }) {
   const [activeTab, setActiveTab] = useState('All Posts');
+  const [blogPosts, setBlogPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api.getBlogPosts().then(data => {
+      setBlogPosts(data.data || []);
+      setLoading(false);
+    }).catch(console.error);
+  }, []);
 
   const tabs = ['All Posts', 'Projects', 'Tutorial', 'Video', 'Life & Notes'];
 
-  const featuredPost = mockBlogPosts.find(p => p.isFeatured);
-  const gridPosts = mockBlogPosts.filter(p => !p.isFeatured);
+  const featuredPost = blogPosts.find(p => p.isFeatured);
+  const gridPosts = blogPosts.filter(p => !p.isFeatured);
 
   const displayedPosts = activeTab === 'All Posts' 
     ? gridPosts 
@@ -60,7 +69,7 @@ function Blog({ onOpenPost }) {
             </div>
             <h3>{featuredPost.title}</h3>
             <p>{featuredPost.excerpt}</p>
-            <a href="#" className="read-more" onClick={(e) => { e.preventDefault(); onOpenPost(featuredPost.id); }}>
+            <a href="#" className="read-more" onClick={(e) => { e.preventDefault(); onOpenPost(featuredPost.slug); }}>
               Read the full post
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>
@@ -82,7 +91,7 @@ function Blog({ onOpenPost }) {
               <div className="blog-meta"><span>{post.date}</span><span className="dot-sep"></span><span>{post.readTime}</span></div>
               <h4>{post.title}</h4>
               <p>{post.excerpt}</p>
-              <a href="#" className="read-more" onClick={(e) => { e.preventDefault(); onOpenPost(post.id); }}>
+              <a href="#" className="read-more" onClick={(e) => { e.preventDefault(); onOpenPost(post.slug); }}>
                 {post.hasVideoOverlay ? 'Watch video' : 'Read post'}
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </a>
