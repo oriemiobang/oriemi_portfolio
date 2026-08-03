@@ -103,7 +103,8 @@
 .blog-content .featured-post .fp-media{
   position:relative;
   min-height: 320px;
-  background-size:cover;
+  background-size:contain;
+  background-repeat:no-repeat;
   background-position:center;
 }
 .blog-content .featured-post .fp-media .badge{
@@ -182,7 +183,8 @@
 .blog-content .blog-thumb{
   position:relative;
   height: 170px;
-  background-size:cover;
+  background-size:contain;
+  background-repeat:no-repeat;
   background-position:center;
 }
 .blog-content .blog-thumb .category-pill{

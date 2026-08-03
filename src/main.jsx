@@ -1,6 +1,5 @@
 import { StrictMode, useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
 import './index.css'
 import SideBar from './components/SideBar.jsx'
 import HomePage from './components/HomePage.jsx'
@@ -33,6 +32,7 @@ function MainApp() {
     setView('post-detail');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
 
   const handleBack = () => {
     setView('main');

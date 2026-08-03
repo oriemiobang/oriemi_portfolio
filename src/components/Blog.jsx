@@ -16,12 +16,26 @@ function Blog({ onOpenPost }) {
 
   const tabs = ['All Posts', 'Projects', 'Tutorial', 'Video', 'Life & Notes'];
 
+  const categoryMap = {
+    'projects': 'Projects',
+    'tutorial': 'Tutorial',
+    'video': 'Video',
+    'life': 'Life & Notes'
+  };
+
+  const normalizeCategory = (category) => categoryMap[String(category || '').toLowerCase()] || category || '';
+
   const featuredPost = blogPosts.find(p => p.isFeatured);
   const gridPosts = blogPosts.filter(p => !p.isFeatured);
 
   const displayedPosts = activeTab === 'All Posts' 
     ? gridPosts 
-    : gridPosts.filter(p => p.category.toLowerCase() === activeTab.toLowerCase());
+    : gridPosts.filter(p => normalizeCategory(p.category) === activeTab);
+
+  const formatDate = (iso) => {
+    if (!iso) return "—";
+    return new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  };
 
   return (
     <div id="blog" className="blog-content">
@@ -56,16 +70,16 @@ function Blog({ onOpenPost }) {
       {/* ================= FEATURED POST ================= */}
       {featuredPost && (
         <div className="featured-post">
-          <div className="fp-media" style={{ backgroundImage: `url('${featuredPost.thumbUrl}')` }}>
+          <div className="fp-media" style={{ backgroundImage: `url('${featuredPost.coverUrl}')` }}>
             <span className="badge">Featured</span>
           </div>
           <div className="fp-body">
             <div className="fp-meta">
-              <span>{featuredPost.category.toUpperCase()}</span>
+              <span>{normalizeCategory(featuredPost.category).toUpperCase()}</span>
               <span className="dot-sep"></span>
-              <span>{featuredPost.date}</span>
+              <span>{formatDate(featuredPost.publishedAt || featuredPost.createdAt)}</span>
               <span className="dot-sep"></span>
-              <span>{featuredPost.readTime}</span>
+              <span>{featuredPost.readTime} min read</span>
             </div>
             <h3>{featuredPost.title}</h3>
             <p>{featuredPost.excerpt}</p>
@@ -81,14 +95,14 @@ function Blog({ onOpenPost }) {
       <div className="blog-grid">
         {displayedPosts.map((post) => (
           <div key={post.id} className="blog-card">
-            <div className={`blog-thumb ${post.thumbClass}`} style={{ backgroundImage: `url('${post.thumbUrl}')` }}>
-              <span className="category-pill">{post.category}</span>
-              {post.hasVideoOverlay && (
+            <div className="blog-thumb" style={{ backgroundImage: `url('${post.coverUrl}')` }}>
+              <span className="category-pill">{normalizeCategory(post.category)}</span>
+              {post.type === 'watch' && (
                 <div className="play-overlay"><div className="play-btn"><svg viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20"/></svg></div></div>
               )}
             </div>
             <div className="blog-card-body">
-              <div className="blog-meta"><span>{post.date}</span><span className="dot-sep"></span><span>{post.readTime}</span></div>
+              <div className="blog-meta"><span>{formatDate(post.publishedAt || post.createdAt)}</span><span className="dot-sep"></span><span>{post.readTime} min {post.type === 'watch' ? 'watch' : 'read'}</span></div>
               <h4>{post.title}</h4>
               <p>{post.excerpt}</p>
               <a href="#" className="read-more" onClick={(e) => { e.preventDefault(); onOpenPost(post.slug); }}>

@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import ProfilePic from '../assets/profile-img.jpg';
-import { FaFacebook, FaInstagram, FaTelegram, FaLinkedinIn, FaHome, FaUser, FaFileAlt, FaSuitcase, FaTools, FaPen, FaRobot } from 'react-icons/fa';
+import { FaFacebook, FaInstagram, FaTelegram, FaLinkedinIn, FaHome, FaUser, FaFileAlt, FaSuitcase, FaTools, FaPen, FaRobot, FaBars, FaTimes } from 'react-icons/fa';
 import { MdOutlineMail } from 'react-icons/md';
 import { IconContext } from 'react-icons';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 function SideBar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
 
   const sections = [
@@ -27,6 +28,7 @@ function SideBar() {
     if (section) {
       section.scrollIntoView({ behavior: 'smooth' });
       setActiveSection(sectionId);
+      setIsMobileOpen(false); // Close mobile sidebar after navigating
     }
   };
 
@@ -55,14 +57,31 @@ function SideBar() {
   const NavIcon = ({ icon: Icon }) => <Icon className="shrink-0" />;
 
   const sidebarWidthClass = isCollapsed ? 'w-[84px] lg:w-[84px]' : 'w-72 lg:w-[260px]';
+  const mobileTranslateClass = isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0';
 
   return (
     <>
-      <aside className={`fixed left-0 top-0 z-50 h-screen ${sidebarWidthClass} bg-[#0c1017] text-[#e9ecf1] transition-all duration-300 ease-in-out`}>
+      <button 
+        type="button"
+        className="fixed top-4 right-4 z-[60] lg:hidden p-2 bg-[#149ddd] text-white rounded-full shadow-lg"
+        onClick={() => setIsMobileOpen(!isMobileOpen)}
+        aria-label="Toggle mobile menu"
+      >
+        {isMobileOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+      </button>
+
+      {isMobileOpen && (
+        <div 
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden transition-opacity"
+          onClick={() => setIsMobileOpen(false)}
+        />
+      )}
+
+      <aside className={`fixed left-0 top-0 z-50 h-screen ${sidebarWidthClass} ${mobileTranslateClass} bg-[#0c1017] text-[#e9ecf1] transition-all duration-300 ease-in-out`}>
         <button
           type="button"
           onClick={() => setIsCollapsed((value) => !value)}
-          className="absolute right-[-18px] top-5 flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(255,255,255,0.07)] bg-[#149ddd] text-white shadow-lg transition-transform duration-300 hover:scale-105"
+          className="absolute right-[-18px] top-5 hidden lg:flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(255,255,255,0.07)] bg-[#149ddd] text-white shadow-lg transition-transform duration-300 hover:scale-105"
           aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           {isCollapsed ? <IoIosArrowForward size={24} /> : <IoIosArrowBack size={24} />}
