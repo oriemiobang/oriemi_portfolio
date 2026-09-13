@@ -285,6 +285,8 @@ function ProjectsPage() {
   const fetchProjects = async () => {
     try {
       const res = await fetch(`${API_URL}/projects?all=true`);
+      if (res.status === 401) { localStorage.removeItem('adminToken'); window.location.reload(); return; }
+      if (!res.ok) throw new Error('Failed to fetch projects');
       const data = await res.json();
       // Backend returns a plain array, not { data: [] }
       setProjects(Array.isArray(data) ? data : (data.data || []));
@@ -636,6 +638,8 @@ function BlogPage() {
     try {
       // Use the admin endpoint so drafts are included
       const res = await fetch(`${API_URL}/admin/blog?limit=100`, { headers: getAuthHeaders() });
+      if (res.status === 401) { localStorage.removeItem('adminToken'); window.location.reload(); return; }
+      if (!res.ok) throw new Error('Failed to fetch posts');
       const data = await res.json();
       // Admin endpoint returns { data: [], total, page }
       const posts = Array.isArray(data) ? data : (data.data || []);
@@ -958,8 +962,11 @@ function InboxPage() {
   const fetchMessages = async () => {
     try {
       const res = await fetch(`${API_URL}/admin/contact?limit=100`, { headers: getAuthHeaders() });
+      if (res.status === 401) { localStorage.removeItem('adminToken'); window.location.reload(); return; }
+      if (!res.ok) throw new Error('Failed to fetch messages');
       const data = await res.json();
-      setMessages((data.data || []).map(m => ({ ...m, date: m.createdAt, read: m.isRead, archived: m.isArchived })));
+      const messagesArray = Array.isArray(data) ? data : (data.data || []);
+      setMessages(messagesArray.map(m => ({ ...m, date: m.createdAt, read: m.isRead, archived: m.isArchived })));
     } catch (err) { console.error(err); }
   };
 
@@ -1094,8 +1101,11 @@ function NewsletterPage() {
   const fetchSubscribers = async () => {
     try {
       const res = await fetch(`${API_URL}/newsletter/admin?limit=500`, { headers: getAuthHeaders() });
+      if (res.status === 401) { localStorage.removeItem('adminToken'); window.location.reload(); return; }
+      if (!res.ok) throw new Error('Failed to fetch subscribers');
       const data = await res.json();
-      setSubs((data.data || []).map(s => ({ ...s, date: s.subscribedAt, status: s.isActive ? 'active' : 'unsubscribed' })));
+      const subsArray = Array.isArray(data) ? data : (data.data || []);
+      setSubs(subsArray.map(s => ({ ...s, date: s.subscribedAt, status: s.isActive ? 'active' : 'unsubscribed' })));
     } catch (err) { console.error(err); }
   };
 
@@ -1228,8 +1238,10 @@ function KnowledgePage() {
   const fetchKnowledge = async () => {
     try {
       const res = await fetch(`${API_URL}/ai/admin/knowledge`, { headers: getAuthHeaders() });
+      if (res.status === 401) { localStorage.removeItem('adminToken'); window.location.reload(); return; }
+      if (!res.ok) throw new Error('Failed to fetch knowledge');
       const data = await res.json();
-      setEntries(data || []);
+      setEntries(Array.isArray(data) ? data : (data.data || []));
     } catch (err) { console.error(err); }
   };
   
@@ -1442,6 +1454,8 @@ function AdminDashboard({ onLogout }) {
     const fetchUnread = async () => {
       try {
         const res = await fetch(`${API_URL}/admin/contact?read=false&archived=false&limit=1`, { headers: getAuthHeaders() });
+        if (res.status === 401) { localStorage.removeItem('adminToken'); window.location.reload(); return; }
+        if (!res.ok) throw new Error('Failed to fetch unread');
         const data = await res.json();
         setInboxUnread(data.total || 0);
       } catch (err) { console.error(err); }
