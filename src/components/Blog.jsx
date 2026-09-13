@@ -23,12 +23,14 @@ function Blog({ onOpenPost }) {
     'life': 'Life & Notes'
   };
 
-  const featuredPost = blogPosts.find(p => p.featured);
-  const gridPosts = blogPosts.filter(p => !p.featured);
+  const normalizeCategory = (category) => categoryMap[String(category || '').toLowerCase()] || category || '';
+
+  const featuredPost = blogPosts.find(p => p.isFeatured);
+  const gridPosts = blogPosts.filter(p => !p.isFeatured);
 
   const displayedPosts = activeTab === 'All Posts' 
     ? gridPosts 
-    : gridPosts.filter(p => categoryMap[p.category] === activeTab);
+    : gridPosts.filter(p => normalizeCategory(p.category) === activeTab);
 
   const formatDate = (iso) => {
     if (!iso) return "—";
@@ -73,7 +75,7 @@ function Blog({ onOpenPost }) {
           </div>
           <div className="fp-body">
             <div className="fp-meta">
-              <span>{(categoryMap[featuredPost.category] || featuredPost.category).toUpperCase()}</span>
+              <span>{normalizeCategory(featuredPost.category).toUpperCase()}</span>
               <span className="dot-sep"></span>
               <span>{formatDate(featuredPost.publishedAt || featuredPost.createdAt)}</span>
               <span className="dot-sep"></span>
@@ -94,7 +96,7 @@ function Blog({ onOpenPost }) {
         {displayedPosts.map((post) => (
           <div key={post.id} className="blog-card">
             <div className="blog-thumb" style={{ backgroundImage: `url('${post.coverUrl}')` }}>
-              <span className="category-pill">{categoryMap[post.category] || post.category}</span>
+              <span className="category-pill">{normalizeCategory(post.category)}</span>
               {post.type === 'watch' && (
                 <div className="play-overlay"><div className="play-btn"><svg viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20"/></svg></div></div>
               )}
@@ -104,7 +106,7 @@ function Blog({ onOpenPost }) {
               <h4>{post.title}</h4>
               <p>{post.excerpt}</p>
               <a href="#" className="read-more" onClick={(e) => { e.preventDefault(); onOpenPost(post.slug); }}>
-                {post.type === 'watch' ? 'Watch video' : 'Read post'}
+                {post.hasVideoOverlay ? 'Watch video' : 'Read post'}
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </a>
             </div>

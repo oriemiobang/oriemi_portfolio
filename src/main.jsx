@@ -1,6 +1,5 @@
-import { StrictMode, useState } from 'react'
+import { StrictMode, useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
 import './index.css'
 import SideBar from './components/SideBar.jsx'
 import HomePage from './components/HomePage.jsx'
@@ -20,6 +19,13 @@ function MainApp() {
   const [view, setView] = useState('main'); // 'main' or 'post-detail'
   const [activePostSlug, setActivePostSlug] = useState(null);
 
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, []);
 
   const handleOpenPost = (slug) => {
     setActivePostSlug(slug);
@@ -57,7 +63,6 @@ function MainApp() {
     </div>
   );
 }
-
 
 function Root() {
   if (window.location.pathname.startsWith('/admin')) {
